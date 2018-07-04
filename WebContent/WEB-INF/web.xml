@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <listener>
+  	<!-- listener qui va permettre d'initialiser le dao lors du lancement de l'application -->
+    <listener-class>com.iut.config.InitialisationDaoFactory</listener-class> 
+  </listener>
+  <servlet>
+  	<!-- Servlet qui gère la connexion des clients et conseillers -->
+    <servlet-name>Connexion</servlet-name>
+    <servlet-class>com.iut.servlets.Connexion</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>Connexion</servlet-name>
+  	<url-pattern>/connexion</url-pattern>
+  </servlet-mapping>
+</web-app>
