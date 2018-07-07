@@ -14,8 +14,6 @@ public class ConnexionForm {
 	private static final String CHAMP_LOGIN = "login";
 	private static final String CHAMP_PASSWORD = "password";
 	
-	private static final String ALGO_CHIFFREMENT = "SHA-256";
-	
 	private String resultat;
 	private Map<String, String> erreurs = new HashMap<>();
 	private ClientDao clientDao;

@@ -11,7 +11,7 @@ import static com.iut.dao.DAOUtilitaire.initialisationRequetePreparee;
 import com.iut.beans.Conseiller;
 
 public class ConseillerDaoImpl implements ConseillerDao {
-	private static final String SQL_CONNEXION = "SELECT * FROM conseiller WHERE login = ? AND password = ?";
+	private static final String SQL_CONNEXION 		= "SELECT * FROM conseiller WHERE login = ? AND password = ?";
 	
 	private DAOFactory daoFactory;
 

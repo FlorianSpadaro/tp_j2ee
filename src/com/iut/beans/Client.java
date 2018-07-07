@@ -52,6 +52,4 @@ public class Client {
 	public void setComptes(ArrayList<Compte> comptes) {
 		this.comptes = comptes;
 	}
-	
-	
 }

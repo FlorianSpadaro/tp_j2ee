@@ -1,11 +1,13 @@
 package com.iut.beans;
 
+import java.util.ArrayList;
+
 public class Conseiller {
 	private int id;
 	private String nom;
 	private String prenom;
 	private Agence agence;
-	
+	private ArrayList<Client> clients;
 	
 	
 	public Conseiller() {
@@ -41,6 +43,12 @@ public class Conseiller {
 	}
 	public void setAgence(Agence agence) {
 		this.agence = agence;
+	}
+	public ArrayList<Client> getClients() {
+		return clients;
+	}
+	public void setClients(ArrayList<Client> clients) {
+		this.clients = clients;
 	}
 	
 	

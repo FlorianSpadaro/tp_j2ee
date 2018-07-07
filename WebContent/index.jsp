@@ -7,8 +7,6 @@
 		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 	</head>
 	<body>
-		${ client.nom }
-		${ conseiller.nom }
 		<div class="container">
 			<h1 class="display-1">Connexion</h1>
 			<div class="jumbotron">
@@ -23,7 +21,8 @@
 				<hr/>
 				<div class="tab-content" id="myTabContent">
 				  <div class="tab-pane fade <c:if test="${ empty requestScope.type || requestScope.type == 'client' }">show active</c:if>" id="clientForm" role="tabpanel" aria-labelledby="client-tab">
-				  	<form method="post" action="<c:url value='/connexion' />">
+				  	<form method="post" action="<c:url value='/client' />">
+				  		<input type="hidden" name="connexion" value="true" />
 						<input type="hidden" name="type" value="client" />
 						<div class="form-group">
 							<label for="login" >Nom d'utilisateur</label>
@@ -47,7 +46,8 @@
 					</form>
 				  </div>
 				  <div class="tab-pane fade <c:if test="${ requestScope.type == 'conseiller' }">show active</c:if>" id="conseillerForm" role="tabpanel" aria-labelledby="conseiller-tab">
-				  	<form method="post" action="<c:url value='/connexion' />">
+				  	<form method="post" action="<c:url value='/conseiller' />">
+				  		<input type="hidden" name="connexion" value="true" />
 						<input type="hidden" name="type" value="conseiller" />
 						<div class="form-group">
 							<label for="login" >Nom d'utilisateur</label>

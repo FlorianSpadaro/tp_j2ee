@@ -1,16 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
   <listener>
-  	<!-- listener qui va permettre d'initialiser le dao lors du lancement de l'application -->
-    <listener-class>com.iut.config.InitialisationDaoFactory</listener-class> 
+    <listener-class>com.iut.config.InitialisationDaoFactory</listener-class>
   </listener>
+  <filter>
+    <filter-name>ClientFilter</filter-name>
+    <filter-class>com.iut.filters.ClientFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>ClientFilter</filter-name>
+    <url-pattern>/client/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>ConseillerFilter</filter-name>
+    <filter-class>com.iut.filters.ConseillerFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>ConseillerFilter</filter-name>
+    <url-pattern>/conseiller/*</url-pattern>
+  </filter-mapping>
   <servlet>
-  	<!-- Servlet qui gère la connexion des clients et conseillers -->
-    <servlet-name>Connexion</servlet-name>
-    <servlet-class>com.iut.servlets.Connexion</servlet-class>
+    <servlet-name>ConnexionClient</servlet-name>
+    <servlet-class>com.iut.servlets.ConnexionClient</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>Connexion</servlet-name>
-  	<url-pattern>/connexion</url-pattern>
+    <servlet-name>ConnexionClient</servlet-name>
+    <url-pattern>/client</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ConnexionConseiller</servlet-name>
+    <servlet-class>com.iut.servlets.ConnexionConseiller</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ConnexionConseiller</servlet-name>
+    <url-pattern>/conseiller</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AccueilClient</servlet-name>
+    <servlet-class>com.iut.servlets.AccueilClient</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AccueilClient</servlet-name>
+    <url-pattern>/client/accueil</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AccueilConseiller</servlet-name>
+    <servlet-class>com.iut.servlets.AccueilConseiller</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AccueilConseiller</servlet-name>
+    <url-pattern>/conseiller/accueil</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ListerClients</servlet-name>
+    <servlet-class>com.iut.servlets.ListerClients</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ListerClients</servlet-name>
+    <url-pattern>/conseiller/client</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>CreationCompte</servlet-name>
+    <servlet-class>com.iut.servlets.CreationCompte</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CreationCompte</servlet-name>
+    <url-pattern>/conseiller/creationCompte</url-pattern>
+  </servlet-mapping>
+   <servlet>
+    <servlet-name>AffichageCompte</servlet-name>
+    <servlet-class>com.iut.servlets.AfficherCompte</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AffichageCompte</servlet-name>
+    <url-pattern>/conseiller/client/compte</url-pattern>
   </servlet-mapping>
 </web-app>

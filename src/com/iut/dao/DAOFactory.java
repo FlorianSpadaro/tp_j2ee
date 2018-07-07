@@ -75,4 +75,8 @@ public class DAOFactory {
     public ConseillerDao getConseillerDao() {
     	return new ConseillerDaoImpl(this);
     }
+    
+    public CompteDao getCompteDao() {
+    	return new CompteDaoImpl(this);
+    }
 }
