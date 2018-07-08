@@ -91,4 +91,12 @@
     <servlet-name>SuppressionCompte</servlet-name>
     <url-pattern>/conseiller/client/compte/supprimer</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>NouvelleTransaction</servlet-name>
+    <servlet-class>com.iut.servlets.NouvelleTransaction</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NouvelleTransaction</servlet-name>
+    <url-pattern>/conseiller/client/compte/transaction</url-pattern>
+  </servlet-mapping>
 </web-app>

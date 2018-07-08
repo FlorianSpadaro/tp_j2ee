@@ -23,6 +23,7 @@ public class CompteDaoImpl implements CompteDao{
 	private static final String SQL_GET_CREDITS_COMPTE	= "SELECT * FROM transaction WHERE compte_crediteur = ? ORDER BY date DESC";
 	private static final String SQL_UPDATE_COMPTE		= "UPDATE compte SET libelle = ?, montant = ?, decouvert_max = ?, titulaire_1 = ?, titulaire_2 = ? WHERE id = ?";
 	private static final String SQL_DISABLE_COMPTE		= "UPDATE compte SET actif = false WHERE id = ?";
+	private static final String SQL_CREATE_TRANSACTION	= "INSERT INTO transaction(date, montant, compte_debiteur, compte_crediteur) VALUES(NOW(), ?, ?, ?)";
 	
 	private DAOFactory daoFactory;
 
@@ -211,6 +212,30 @@ public class CompteDaoImpl implements CompteDao{
 		try {
 			connection = daoFactory.getConnection();
 			preparedStatement = initialisationRequetePreparee(connection, SQL_DISABLE_COMPTE, false, compteId);
+			resultset = preparedStatement.executeUpdate();
+			if(resultset > 0)
+			{
+				result = true;
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(preparedStatement, connection);
+		}
+		
+		return result;
+	}
+	
+	public boolean createTransaction(Transaction transaction, Compte compteDebiteur, Compte compteCrediteur)
+	{
+		boolean result = false;
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		int resultset;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_CREATE_TRANSACTION, false, transaction.getMontant(), (compteDebiteur == null ? null : compteDebiteur.getId() ), (compteCrediteur == null ? null : compteCrediteur.getId() ));
 			resultset = preparedStatement.executeUpdate();
 			if(resultset > 0)
 			{

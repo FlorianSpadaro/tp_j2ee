@@ -60,6 +60,12 @@
 		<div class="row">
 			<h2 class="display-2">Transactions</h2>
 		</div>
+		<div class="row">
+			<form class="form-inline" method="POST" action="<c:url value='/conseiller/client/compte/transaction' />">
+				<button class="btn btn-success">Nouvelle transaction</button>
+			</form>
+		</div>
+		<br/>
 		<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
 		  <li class="nav-item">
 		    <a class="nav-link active" id="pills-credit-tab" data-toggle="pill" href="#pills-credit" role="tab" aria-controls="pills-credit" aria-selected="true">Crédits</a>

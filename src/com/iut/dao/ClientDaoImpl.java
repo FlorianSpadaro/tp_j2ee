@@ -17,7 +17,7 @@ public class ClientDaoImpl implements ClientDao {
 	private static final String SQL_CONNEXION 				= "SELECT * FROM client WHERE login = ? AND password = ?";
 	private static final String SQL_GET_CLIENT_ID 			= "SELECT * FROM client WHERE id = ?";
 	private static final String SQL_GET_CLIENTS_CONSEILLER	= "SELECT * FROM client WHERE conseiller_id = ?";
-	private static final String SQL_GET_CLIENTS				= "SELECT * FROM client";
+	private static final String SQL_GET_CLIENTS				= "SELECT * FROM client ORDER BY nom, prenom";
 	private static final String SQL_GET_CLIENTS_COMPTE		= "SELECT titulaire_1, titulaire_2 FROM compte WHERE id = ?";
 	
 	private DAOFactory daoFactory;
