@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import static com.iut.dao.DAOUtilitaire.fermeturesSilencieuses;
@@ -11,11 +13,14 @@ import static com.iut.dao.DAOUtilitaire.initialisationRequetePreparee;
 
 import com.iut.beans.Client;
 import com.iut.beans.Compte;
+import com.iut.beans.Transaction;
 
 public class CompteDaoImpl implements CompteDao{
 	private static final String SQL_GET_COMPTES_CLIENT	= "SELECT * FROM compte WHERE titulaire_1 = ? OR titulaire_2 = ?";
 	private static final String SQL_CREATE_COMPTE		= "INSERT INTO compte(libelle, montant, titulaire_1, titulaire_2, decouvert_max) VALUES(?, ?, ?, ?, ?)";
 	private static final String SQL_GET_COMPTE_ID		= "SELECT * FROM compte WHERE id = ?";
+	private static final String SQL_GET_DEBITS_COMPTE	= "SELECT * FROM transaction WHERE compte_debiteur = ? ORDER BY date DESC";
+	private static final String SQL_GET_CREDITS_COMPTE	= "SELECT * FROM transaction WHERE compte_crediteur = ? ORDER BY date DESC";
 	
 	private DAOFactory daoFactory;
 
@@ -96,6 +101,78 @@ public class CompteDaoImpl implements CompteDao{
 		}
 		
 		return compte;
+	}
+	
+	public ArrayList<Transaction> getDebitsByCompte(Compte compte)
+	{
+		ArrayList<Transaction> transactions = new ArrayList<>();
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_GET_DEBITS_COMPTE, false, compte.getId());
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next())
+			{
+				Transaction transaction = new Transaction();
+				transaction.setId(resultSet.getInt("id"));
+				transaction.setMontant(resultSet.getFloat("montant"));
+				
+				String dateStr = resultSet.getString("date");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
+				transaction.setDate(dateTime);
+				
+				Compte compteCrediteur = getCompteById(resultSet.getInt("compte_crediteur"));
+				transaction.setCompteCorrespondant(compteCrediteur);
+				
+				transactions.add(transaction);
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(resultSet, preparedStatement, connection);
+		}
+		
+		return transactions;
+	}
+	
+	public ArrayList<Transaction> getCreditsByCompte(Compte compte)
+	{
+		ArrayList<Transaction> transactions = new ArrayList<>();
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_GET_CREDITS_COMPTE, false, compte.getId());
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next())
+			{
+				Transaction transaction = new Transaction();
+				transaction.setId(resultSet.getInt("id"));
+				transaction.setMontant(resultSet.getFloat("montant"));
+				
+				String dateStr = resultSet.getString("date");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
+				transaction.setDate(dateTime);
+				
+				Compte compteDebiteur = getCompteById(resultSet.getInt("compte_debiteur"));
+				transaction.setCompteCorrespondant(compteDebiteur);
+				
+				transactions.add(transaction);
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(resultSet, preparedStatement, connection);
+		}
+		
+		return transactions;
 	}
 	
 	private Compte map(ResultSet resultSet) throws SQLException{

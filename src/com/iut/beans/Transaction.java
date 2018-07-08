@@ -1,16 +1,18 @@
 package com.iut.beans;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Transaction {
 	private int id;
-	private Compte debiteur;
-	private Compte crediteur;
+	private LocalDateTime date;
+	private String dateAffiche;
+	private Compte compteCorrespondant;
 	private float montant;
-	public Transaction(int id, Compte debiteur, Compte crediteur, float montant) {
+	
+	
+	public Transaction() {
 		super();
-		this.id = id;
-		this.debiteur = debiteur;
-		this.crediteur = crediteur;
-		this.montant = montant;
 	}
 	public int getId() {
 		return id;
@@ -18,23 +20,34 @@ public class Transaction {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Compte getDebiteur() {
-		return debiteur;
-	}
-	public void setDebiteur(Compte debiteur) {
-		this.debiteur = debiteur;
-	}
-	public Compte getCrediteur() {
-		return crediteur;
-	}
-	public void setCrediteur(Compte crediteur) {
-		this.crediteur = crediteur;
-	}
 	public float getMontant() {
 		return montant;
 	}
 	public void setMontant(float montant) {
 		this.montant = montant;
+	}
+	public Compte getCompteCorrespondant() {
+		return compteCorrespondant;
+	}
+	public void setCompteCorrespondant(Compte compteCorrespondant) {
+		this.compteCorrespondant = compteCorrespondant;
+	}
+	public LocalDateTime getDate() {
+		return date;
+	}
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+	public String getDateAffiche() {
+		return dateAffiche;
+	}
+	public void setDateAffiche(String dateAffiche) {
+		this.dateAffiche = dateAffiche;
+	}
+	public String afficherDate()
+	{
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		return this.date.format(formatter);
 	}
 	
 }

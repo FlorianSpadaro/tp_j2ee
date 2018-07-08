@@ -1,10 +1,16 @@
 package com.iut.beans;
 
+import java.util.ArrayList;
+
 public class Compte {
 	private int id;
 	private String libelle;
 	private float montant;
 	private float decouvertMax;
+	private Client proprietaire1;
+	private Client proprietaire2;
+	private ArrayList<Transaction> debits;
+	private ArrayList<Transaction> credits;
 	
 	public Compte() {
 		super();
@@ -39,6 +45,31 @@ public class Compte {
 	public void setDecouvertMax(float decouvertMax) {
 		this.decouvertMax = decouvertMax;
 	}
+	public ArrayList<Transaction> getDebits() {
+		return debits;
+	}
+	public void setDebits(ArrayList<Transaction> debits) {
+		this.debits = debits;
+	}
+	public ArrayList<Transaction> getCredits() {
+		return credits;
+	}
+	public void setCredits(ArrayList<Transaction> credits) {
+		this.credits = credits;
+	}
+	public Client getProprietaire1() {
+		return proprietaire1;
+	}
+	public void setProprietaire1(Client proprietaire1) {
+		this.proprietaire1 = proprietaire1;
+	}
+	public Client getProprietaire2() {
+		return proprietaire2;
+	}
+	public void setProprietaire2(Client proprietaire2) {
+		this.proprietaire2 = proprietaire2;
+	}
+	
 	
 	
 }

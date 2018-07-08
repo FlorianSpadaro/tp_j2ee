@@ -19,8 +19,14 @@
 				<h5 class="display-5">Informations du compte</h5>
 				<table>
 					<tr>
-						<th class="font-weight-bold">Propriétaire: </th>
-						<td>${ requestScope.client.nom } ${ requestScope.client.prenom }</td>
+						<th class="font-weight-bold">Propriétaire(s): </th>
+						<td>
+							${ requestScope.compte.proprietaire1.nom } ${ requestScope.compte.proprietaire1.prenom }
+							<c:if test="${ !empty requestScope.compte.proprietaire2 }">
+								<br/>
+								${ requestScope.compte.proprietaire2.nom } ${ requestScope.compte.proprietaire2.prenom }
+							</c:if>
+						</td>
 					</tr>
 					<tr>
 						<th class="font-weight-bold">Libellé: </th>
@@ -41,7 +47,75 @@
 		<div class="row">
 			<h2 class="display-2">Transactions</h2>
 		</div>
-		
+		<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+		  <li class="nav-item">
+		    <a class="nav-link active" id="pills-credit-tab" data-toggle="pill" href="#pills-credit" role="tab" aria-controls="pills-credit" aria-selected="true">Crédits</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="pills-debit-tab" data-toggle="pill" href="#pills-debit" role="tab" aria-controls="pills-debit" aria-selected="false">Débits</a>
+		  </li>
+		</ul>
+		<br/>
+		<div class="tab-content" id="pills-tabContent">
+		  <div class="tab-pane fade show active" id="pills-credit" role="tabpanel" aria-labelledby="pills-credit-tab">
+		  	<div class="row" style="justify-content: center;">
+		  		<c:forEach items="${ requestScope.compte.credits }" var="transaction">
+			  		<div class="card col-md-3">
+					  <div class="card-body">
+					    <h5 class="card-title text-center" style="color: green;">
+					    	+${ transaction.montant }&euro;
+					    </h5>
+					    <h6 class="card-subtitle mb-2 text-muted  text-center">${ transaction.dateAffiche }</h6>
+					    <p class="card-text">
+					    	<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
+					    	${ transaction.compteCorrespondant.proprietaire1.nom } ${ transaction.compteCorrespondant.proprietaire1.prenom }
+					    	<c:if test="${ !empty transaction.compteCorrespondant.proprietaire2 }">
+								<br/>
+								${ transaction.compteCorrespondant.proprietaire2.nom } ${ transaction.compteCorrespondant.proprietaire2.prenom }
+							</c:if>
+							<hr/>
+							<div>
+								<label class="font-weight-bold">Compte: </label> ${ transaction.compteCorrespondant.libelle }
+							</div>
+					    </p>
+					  </div>
+					</div>
+			  	</c:forEach>
+		  	</div>
+		  </div>
+		  <div class="tab-pane fade" id="pills-debit" role="tabpanel" aria-labelledby="pills-debit-tab">
+		  	<div class="row" style="justify-content: center;">
+		  		<c:forEach items="${ requestScope.compte.debits }" var="transaction">
+			  		<div class="card col-md-3">
+					  <div class="card-body">
+					    <h5 class="card-title  text-center" style="color: red;">
+					    	-${ transaction.montant }&euro;
+					    </h5>
+					    <h6 class="card-subtitle mb-2 text-muted  text-center">${ transaction.dateAffiche }</h6>
+					    <p class="card-text">
+					    	<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
+					    	${ transaction.compteCorrespondant.proprietaire1.nom } ${ transaction.compteCorrespondant.proprietaire1.prenom }
+					    	<c:if test="${ !empty transaction.compteCorrespondant.proprietaire2 }">
+								<br/>
+								${ transaction.compteCorrespondant.proprietaire2.nom } ${ transaction.compteCorrespondant.proprietaire2.prenom }
+							</c:if>
+							<hr/>
+							<div>
+								<label class="font-weight-bold">Compte: </label> ${ transaction.compteCorrespondant.libelle }
+							</div>
+					    </p>
+					  </div>
+					</div>
+			  	</c:forEach>
+		  	</div>
+		  </div>
+		</div>		
 	</div>
+	<br/>
+	
+	<!-- SCRIPTS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+	
 </body>
 </html>
