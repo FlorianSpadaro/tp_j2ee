@@ -16,11 +16,13 @@ import com.iut.beans.Compte;
 import com.iut.beans.Transaction;
 
 public class CompteDaoImpl implements CompteDao{
-	private static final String SQL_GET_COMPTES_CLIENT	= "SELECT * FROM compte WHERE titulaire_1 = ? OR titulaire_2 = ?";
+	private static final String SQL_GET_COMPTES_CLIENT	= "SELECT * FROM compte WHERE (titulaire_1 = ? OR titulaire_2 = ?) AND actif = true";
 	private static final String SQL_CREATE_COMPTE		= "INSERT INTO compte(libelle, montant, titulaire_1, titulaire_2, decouvert_max) VALUES(?, ?, ?, ?, ?)";
 	private static final String SQL_GET_COMPTE_ID		= "SELECT * FROM compte WHERE id = ?";
 	private static final String SQL_GET_DEBITS_COMPTE	= "SELECT * FROM transaction WHERE compte_debiteur = ? ORDER BY date DESC";
 	private static final String SQL_GET_CREDITS_COMPTE	= "SELECT * FROM transaction WHERE compte_crediteur = ? ORDER BY date DESC";
+	private static final String SQL_UPDATE_COMPTE		= "UPDATE compte SET libelle = ?, montant = ?, decouvert_max = ?, titulaire_1 = ?, titulaire_2 = ? WHERE id = ?";
+	private static final String SQL_DISABLE_COMPTE		= "UPDATE compte SET actif = false WHERE id = ?";
 	
 	private DAOFactory daoFactory;
 
@@ -173,6 +175,54 @@ public class CompteDaoImpl implements CompteDao{
 		}
 		
 		return transactions;
+	}
+	
+	public boolean updateCompte(Compte compte)
+	{
+		boolean result = false;
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		int resultSet;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_COMPTE, false, compte.getLibelle(), compte.getMontant(), compte.getDecouvertMax(), compte.getProprietaire1().getId(), ( compte.getProprietaire2() == null ? null : compte.getProprietaire2().getId()), compte.getId());
+			resultSet = preparedStatement.executeUpdate();
+			if(resultSet > 0)
+			{
+				result = true;
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(preparedStatement, connection);
+		}
+		
+		return result;
+	}
+	
+	public boolean disableCompte(int compteId)
+	{
+		boolean result = false;
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		int resultset;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_DISABLE_COMPTE, false, compteId);
+			resultset = preparedStatement.executeUpdate();
+			if(resultset > 0)
+			{
+				result = true;
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(preparedStatement, connection);
+		}
+		
+		return result;
 	}
 	
 	private Compte map(ResultSet resultSet) throws SQLException{

@@ -67,12 +67,28 @@
     <servlet-name>CreationCompte</servlet-name>
     <url-pattern>/conseiller/creationCompte</url-pattern>
   </servlet-mapping>
-   <servlet>
+  <servlet>
     <servlet-name>AffichageCompte</servlet-name>
     <servlet-class>com.iut.servlets.AfficherCompte</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>AffichageCompte</servlet-name>
     <url-pattern>/conseiller/client/compte</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ModificationCompte</servlet-name>
+    <servlet-class>com.iut.servlets.ModificationCompte</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ModificationCompte</servlet-name>
+    <url-pattern>/conseiller/client/compte/modifier</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>SuppressionCompte</servlet-name>
+    <servlet-class>com.iut.servlets.SuppressionCompte</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SuppressionCompte</servlet-name>
+    <url-pattern>/conseiller/client/compte/supprimer</url-pattern>
   </servlet-mapping>
 </web-app>

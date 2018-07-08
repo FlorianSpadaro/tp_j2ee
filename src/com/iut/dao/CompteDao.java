@@ -12,4 +12,6 @@ public interface CompteDao {
 	Compte getCompteById(int id);
 	ArrayList<Transaction> getDebitsByCompte(Compte compte);
 	ArrayList<Transaction> getCreditsByCompte(Compte compte);
+	boolean updateCompte(Compte compte);
+	boolean disableCompte(int compteId);
 }

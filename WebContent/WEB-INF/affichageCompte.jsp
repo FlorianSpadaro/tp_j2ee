@@ -10,9 +10,22 @@
 	<c:import url="/inc/conseiller/navbar.jsp"></c:import>
 	<br/>
 	<div class="container">
+		<c:if test="${ !empty requestScope.resultat }">
+			<div class="alert alert-danger">
+				${ requestScope.resultat }
+			</div>
+		</c:if>
 		<div class="row float-right d-none d-lg-block">
-			<button class="btn btn-primary">Modifier</button>
-			<button class="btn btn-danger" style="margin-left: 10px;">Supprimer</button>
+			<form class="form-inline float-right" method="POST" action="<c:url value='/conseiller/client/compte/supprimer' />">
+				<input type="hidden" name="compte" value="${ compte.id }" />
+				<input type="hidden" name="client" value="${ client.id }" />
+				<button class="btn btn-danger" style="margin-left: 10px;" id="supprimerCompte">Désactiver</button>
+			</form>
+			<form class="form-inline float-right" method="GET" action="<c:url value='/conseiller/client/compte/modifier' />">
+				<input type="hidden" name="compte" value="${ compte.id }" />
+				<input type="hidden" name="client" value="${ client.id }" />
+				<button class="btn btn-primary">Modifier</button>
+			</form>
 		</div>
 		<div class="row">
 			<div class="jumbotron offset-md-3 col-md-6">
@@ -116,6 +129,16 @@
 	<!-- SCRIPTS -->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-	
+	<script>
+		$(function(){
+			$("#supprimerCompte").click(function(e){
+				var reponse = confirm("Voulez-vous vraiment désactiver ce compte?");
+				if(!reponse)
+				{
+					e.preventDefault();
+				}
+			});
+		});
+	</script>
 </body>
 </html>
