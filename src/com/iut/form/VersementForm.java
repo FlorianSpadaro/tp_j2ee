@@ -1,11 +1,14 @@
 package com.iut.form;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.iut.beans.Client;
 import com.iut.beans.Compte;
 import com.iut.beans.Transaction;
+import com.iut.dao.ClientDao;
 import com.iut.dao.CompteDao;
 
 public class VersementForm {
@@ -15,10 +18,12 @@ public class VersementForm {
 	private HashMap<String, String> erreurs;
 	private String resultat;
 	private CompteDao compteDao;
+	private ClientDao clientDao;
 	
-	public VersementForm(CompteDao compteDao) {
+	public VersementForm(CompteDao compteDao, ClientDao clientDao) {
 		super();
 		this.compteDao = compteDao;
+		this.clientDao = clientDao;
 		this.erreurs = new HashMap<>();
 	}
 
@@ -58,6 +63,10 @@ public class VersementForm {
     	{
     		Float montant = Float.parseFloat(montantString);
     		Compte compte = compteDao.getCompteById(Integer.parseInt(getValeurChamp(request, ATT_COMPTE)));
+    		
+    		ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
+    		compte.setProprietaire1(proprietaires.get(0));
+    		compte.setProprietaire2(proprietaires.get(1));
     		
     		Transaction transaction = new Transaction();
     		transaction.setMontant(montant);

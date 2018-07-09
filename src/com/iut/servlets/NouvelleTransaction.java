@@ -24,6 +24,7 @@ public class NouvelleTransaction extends HttpServlet {
 	
 	public static final String CONF_DAO_FACTORY 	= "daofactory";
 	public static final String ATT_LISTE_CLIENTS	= "listeClients";
+	public static final String ATT_COMPTE			= "compte";
 	public static final String VUE					= "/WEB-INF/nouvelleTransaction.jsp";
 	
 	private ClientDao clientDao;
@@ -54,12 +55,15 @@ public class NouvelleTransaction extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String compte = request.getParameter(ATT_COMPTE);
+		
 		ArrayList<Client> listeClients = clientDao.getListeClients();
 		for(Client client : listeClients)
 		{
 			client.setComptes(compteDao.getComptesByClient(client));
 		}
 		
+		request.setAttribute(ATT_COMPTE, compte);
 		request.setAttribute(ATT_LISTE_CLIENTS, listeClients);
 		
 		this.getServletContext().getRequestDispatcher(VUE).forward(request, response);

@@ -29,6 +29,7 @@
 		  <div class="tab-pane fade show active" id="pills-versement" role="tabpanel" aria-labelledby="pills-versement-tab">
 		  	<div class="row" style="justify-content: center;">
 		  		<form class="form" method="POST" action="<c:url value='/conseiller/client/compte/transaction/versement' />">
+		  			<input type="hidden" name="compte" value="${ requestScope.compte }" />
 		  			<div class="form-group">
 		  				<label>Montant:</label>
 		  				<input type="text" name="montant" value="0" class="form-control" />
@@ -41,6 +42,7 @@
 		  <div class="tab-pane fade" id="pills-virement" role="tabpanel" aria-labelledby="pills-virement-tab">
 		  	<div class="row" style="justify-content: center;">
 		  		<form class="form" method="POST" action="<c:url value='/conseiller/client/compte/transaction/virement' />">
+		  			<input type="hidden" name="compte" value="${ requestScope.compte }" />
 		  			<div class="form-group">
 		  				<label>Destinataire:</label>
 		  				<select class="form-control" name="destinataire">

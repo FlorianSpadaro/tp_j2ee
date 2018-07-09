@@ -99,4 +99,21 @@
     <servlet-name>NouvelleTransaction</servlet-name>
     <url-pattern>/conseiller/client/compte/transaction</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>Versement</servlet-name>
+    <servlet-class>com.iut.servlets.Versement</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Versement</servlet-name>
+    <url-pattern>/conseiller/client/compte/transaction/versement</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Virement</servlet-name>
+    <servlet-class>com.iut.servlets.Virement</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Virement</servlet-name>
+    <url-pattern>/conseiller/client/compte/transaction/virement</url-pattern>
+  </servlet-mapping>
 </web-app>

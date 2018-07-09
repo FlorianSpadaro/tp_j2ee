@@ -66,18 +66,24 @@ public class AfficherCompte extends HttpServlet {
 		compte.setCredits(compteDao.getCreditsByCompte(compte));
 		for(Transaction transaction : compte.getCredits())
 		{
-			ArrayList<Client> proprietaires = clientDao.getClientsByCompte(transaction.getCompteCorrespondant());
-			transaction.getCompteCorrespondant().setProprietaire1(proprietaires.get(0));
-			transaction.getCompteCorrespondant().setProprietaire2(proprietaires.get(1));
+			if(transaction.getCompteCorrespondant() != null)
+			{
+				ArrayList<Client> proprietaires = clientDao.getClientsByCompte(transaction.getCompteCorrespondant());
+				transaction.getCompteCorrespondant().setProprietaire1(proprietaires.get(0));
+				transaction.getCompteCorrespondant().setProprietaire2(proprietaires.get(1));
+			}
 			transaction.setDateAffiche(transaction.afficherDate());
 		}
 		
 		compte.setDebits(compteDao.getDebitsByCompte(compte));
 		for(Transaction transaction : compte.getDebits())
 		{
-			ArrayList<Client> proprietaires = clientDao.getClientsByCompte(transaction.getCompteCorrespondant());
-			transaction.getCompteCorrespondant().setProprietaire1(proprietaires.get(0));
-			transaction.getCompteCorrespondant().setProprietaire2(proprietaires.get(1));
+			if(transaction.getCompteCorrespondant() != null)
+			{
+				ArrayList<Client> proprietaires = clientDao.getClientsByCompte(transaction.getCompteCorrespondant());
+				transaction.getCompteCorrespondant().setProprietaire1(proprietaires.get(0));
+				transaction.getCompteCorrespondant().setProprietaire2(proprietaires.get(1));
+			}
 			transaction.setDateAffiche(transaction.afficherDate());
 		}
 		

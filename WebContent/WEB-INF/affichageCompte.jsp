@@ -62,6 +62,7 @@
 		</div>
 		<div class="row">
 			<form class="form-inline" method="POST" action="<c:url value='/conseiller/client/compte/transaction' />">
+				<input type="hidden" name="compte" value="${ requestScope.compte.id }" />
 				<button class="btn btn-success">Nouvelle transaction</button>
 			</form>
 		</div>
@@ -79,23 +80,30 @@
 		  <div class="tab-pane fade show active" id="pills-credit" role="tabpanel" aria-labelledby="pills-credit-tab">
 		  	<div class="row" style="justify-content: center;">
 		  		<c:forEach items="${ requestScope.compte.credits }" var="transaction">
-			  		<div class="card col-md-3">
+			  		<div class="card col-md-3" style="margin-right: 5px; margin-left: 5px;">
 					  <div class="card-body">
 					    <h5 class="card-title text-center" style="color: green;">
 					    	+${ transaction.montant }&euro;
 					    </h5>
 					    <h6 class="card-subtitle mb-2 text-muted  text-center">${ transaction.dateAffiche }</h6>
 					    <p class="card-text">
-					    	<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
-					    	${ transaction.compteCorrespondant.proprietaire1.nom } ${ transaction.compteCorrespondant.proprietaire1.prenom }
-					    	<c:if test="${ !empty transaction.compteCorrespondant.proprietaire2 }">
-								<br/>
-								${ transaction.compteCorrespondant.proprietaire2.nom } ${ transaction.compteCorrespondant.proprietaire2.prenom }
-							</c:if>
-							<hr/>
-							<div>
-								<label class="font-weight-bold">Compte: </label> ${ transaction.compteCorrespondant.libelle }
-							</div>
+					    	<c:if test="${ !empty transaction.compteCorrespondant }">
+					    		<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
+						    	${ transaction.compteCorrespondant.proprietaire1.nom } ${ transaction.compteCorrespondant.proprietaire1.prenom }
+						    	<c:if test="${ !empty transaction.compteCorrespondant.proprietaire2 }">
+									<br/>
+									${ transaction.compteCorrespondant.proprietaire2.nom } ${ transaction.compteCorrespondant.proprietaire2.prenom }
+								</c:if>
+								<hr/>
+								<div>
+									<label class="font-weight-bold">Compte: </label> ${ transaction.compteCorrespondant.libelle }
+								</div>
+					    	</c:if>
+					    	<c:if test="${ empty transaction.compteCorrespondant }">
+					    		<div class="text-center">
+					    			<label class="badge badge-warning">Versement</label>
+					    		</div>
+					    	</c:if>
 					    </p>
 					  </div>
 					</div>
@@ -105,23 +113,30 @@
 		  <div class="tab-pane fade" id="pills-debit" role="tabpanel" aria-labelledby="pills-debit-tab">
 		  	<div class="row" style="justify-content: center;">
 		  		<c:forEach items="${ requestScope.compte.debits }" var="transaction">
-			  		<div class="card col-md-3">
+			  		<div class="card col-md-3"  style="margin-right: 5px; margin-left: 5px;">
 					  <div class="card-body">
 					    <h5 class="card-title  text-center" style="color: red;">
 					    	-${ transaction.montant }&euro;
 					    </h5>
 					    <h6 class="card-subtitle mb-2 text-muted  text-center">${ transaction.dateAffiche }</h6>
 					    <p class="card-text">
-					    	<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
-					    	${ transaction.compteCorrespondant.proprietaire1.nom } ${ transaction.compteCorrespondant.proprietaire1.prenom }
-					    	<c:if test="${ !empty transaction.compteCorrespondant.proprietaire2 }">
-								<br/>
-								${ transaction.compteCorrespondant.proprietaire2.nom } ${ transaction.compteCorrespondant.proprietaire2.prenom }
-							</c:if>
-							<hr/>
-							<div>
-								<label class="font-weight-bold">Compte: </label> ${ transaction.compteCorrespondant.libelle }
-							</div>
+					    	<c:if test="${ !empty transaction.compteCorrespondant}">
+					    		<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
+						    	${ transaction.compteCorrespondant.proprietaire1.nom } ${ transaction.compteCorrespondant.proprietaire1.prenom }
+						    	<c:if test="${ !empty transaction.compteCorrespondant.proprietaire2 }">
+									<br/>
+									${ transaction.compteCorrespondant.proprietaire2.nom } ${ transaction.compteCorrespondant.proprietaire2.prenom }
+								</c:if>
+								<hr/>
+								<div>
+									<label class="font-weight-bold">Compte: </label> ${ transaction.compteCorrespondant.libelle }
+								</div>
+					    	</c:if>
+					    	<c:if test="${ empty transaction.compteCorrespondant }">
+					    		<div class="text-center">
+					    			<label class="badge badge-warning">Retrait</label>
+					    		</div>
+					    	</c:if>
 					    </p>
 					  </div>
 					</div>
