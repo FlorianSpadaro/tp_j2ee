@@ -42,13 +42,6 @@ public class VersementForm {
 	public void setResultat(String resultat) {
 		this.resultat = resultat;
 	}
-	
-	/*
-     * Ajoute un message correspondant au champ spécifié à la map des erreurs.
-     */
-    private void setErreur( String champ, String message ) {
-        erreurs.put( champ, message );
-    }
     
     public void versement(HttpServletRequest request) {
     	String montantString = getValeurChamp(request, ATT_MONTANT);
@@ -99,16 +92,23 @@ public class VersementForm {
 		int difference = 0;
 		try {
 			Float ceMontant = Float.parseFloat(montant);
-			Float montantMinimal = Float.parseFloat("50");
+			Float montantMinimal = Float.parseFloat("0");
 			difference = Float.compare(ceMontant, montantMinimal);
 		}catch(Exception e) {
 			throw new Exception("Veuillez entrer un montant valide");
 		}
 		if(difference < 0)
 		{
-			throw new Exception("Merci de choisir un montant d'au moins 50 euros");
+			throw new Exception("Merci de choisir un montant positif");
 		}
 	}
+	
+	/*
+     * Ajoute un message correspondant au champ spécifié à la map des erreurs.
+     */
+    private void setErreur( String champ, String message ) {
+        erreurs.put( champ, message );
+    }
 	
 	/*
      * Méthode utilitaire qui retourne null si un champ est vide, et son contenu

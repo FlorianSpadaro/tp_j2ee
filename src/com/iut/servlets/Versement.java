@@ -1,12 +1,15 @@
 package com.iut.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.iut.beans.Client;
 import com.iut.dao.ClientDao;
 import com.iut.dao.CompteDao;
 import com.iut.dao.DAOFactory;
@@ -19,10 +22,11 @@ import com.iut.form.VersementForm;
 public class Versement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	public static final String CONF_DAO_FACTORY = "daofactory";
-	public static final String ATT_FORM			= "form";
-	public static final String ATT_COMPTE		= "compte";
-	public static final String VUE				= "/WEB-INF/nouvelleTransaction.jsp";
+	public static final String CONF_DAO_FACTORY 	= "daofactory";
+	public static final String ATT_FORM				= "form";
+	public static final String ATT_COMPTE			= "compte";
+	public static final String ATT_LISTE_CLIENTS	= "listeClients";
+	public static final String VUE					= "/WEB-INF/nouvelleTransaction.jsp";
 	
 	CompteDao compteDao;
 	ClientDao clientDao;
@@ -54,11 +58,18 @@ public class Versement extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String compte = request.getParameter(ATT_COMPTE);
 		
+		ArrayList<Client> listeClients = clientDao.getListeClients();
+		for(Client client : listeClients)
+		{
+			client.setComptes(compteDao.getComptesByClient(client));
+		}
+		
 		VersementForm form = new VersementForm(compteDao, clientDao);
 		form.versement(request);
 		
 		request.setAttribute(ATT_FORM, form);
 		request.setAttribute(ATT_COMPTE, compte);
+		request.setAttribute(ATT_LISTE_CLIENTS, listeClients);
 		
 		this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
 	}

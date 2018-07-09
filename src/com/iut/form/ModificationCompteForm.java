@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.iut.beans.Client;
 import com.iut.beans.Compte;
 import com.iut.dao.ClientDao;
 import com.iut.dao.CompteDao;

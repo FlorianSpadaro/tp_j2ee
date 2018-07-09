@@ -11,22 +11,22 @@
 	<br/>
 	<div class="container" >
 		<h1 class="display-1">Nouvelle Transaction</h1>
-		<c:if test="${ !empty requestScope.form }">
+		<c:if test="${ !empty requestScope.form.resultat }">
 			<div class="alert alert-info">
 				${ requestScope.form.resultat }
 			</div>
 		</c:if>
 		<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
 		  <li class="nav-item">
-		    <a class="nav-link active" id="pills-versement-tab" data-toggle="pill" href="#pills-versement" role="tab" aria-controls="pills-versement" aria-selected="true">Versement</a>
+		    <a class="nav-link <c:if test="${ empty requestScope.type }">active</c:if>" id="pills-versement-tab" data-toggle="pill" href="#pills-versement" role="tab" aria-controls="pills-versement" aria-selected="${ empty requestScope.type ? 'true' : 'false' }">Versement</a>
 		  </li>
 		  <li class="nav-item">
-		    <a class="nav-link" id="pills-virement-tab" data-toggle="pill" href="#pills-virement" role="tab" aria-controls="pills-virement" aria-selected="false">Virement</a>
+		    <a class="nav-link <c:if test="${ !empty requestScope.type }">active</c:if>" id="pills-virement-tab" data-toggle="pill" href="#pills-virement" role="tab" aria-controls="pills-virement" aria-selected="${ !empty requestScope.type ? 'true' : 'false' }">Virement</a>
 		  </li>
 		</ul>
 		<br/>
 		<div class="tab-content" id="pills-tabContent">
-		  <div class="tab-pane fade show active" id="pills-versement" role="tabpanel" aria-labelledby="pills-versement-tab">
+		  <div class="tab-pane fade <c:if test="${ empty requestScope.type }">show active</c:if>" id="pills-versement" role="tabpanel" aria-labelledby="pills-versement-tab">
 		  	<div class="row" style="justify-content: center;">
 		  		<form class="form" method="POST" action="<c:url value='/conseiller/client/compte/transaction/versement' />">
 		  			<input type="hidden" name="compte" value="${ requestScope.compte }" />
@@ -39,7 +39,7 @@
 		  		</form>
 		  	</div>
 		  </div>
-		  <div class="tab-pane fade" id="pills-virement" role="tabpanel" aria-labelledby="pills-virement-tab">
+		  <div class="tab-pane fade <c:if test="${ !empty requestScope.type }">show active</c:if>" id="pills-virement" role="tabpanel" aria-labelledby="pills-virement-tab">
 		  	<div class="row" style="justify-content: center;">
 		  		<form class="form" method="POST" action="<c:url value='/conseiller/client/compte/transaction/virement' />">
 		  			<input type="hidden" name="compte" value="${ requestScope.compte }" />
@@ -57,7 +57,9 @@
 		  			</div>
 		  			<div class="form-group">
 		  				<label>Montant:</label>
-		  				<input type="text" name="montant" value="0" class="form-control" />
+		  				<input type="text" name="montantVirement" value="0" class="form-control" />
+		  				<label class="badge badge-danger">${ requestScope.form.erreurs["compte"] }</label>
+		  				<label class="badge badge-danger">${ requestScope.form.erreurs["montantVirement"] }</label>
 		  			</div>
 		  			<button class="btn btn-success">Valider</button>
 		  		</form>

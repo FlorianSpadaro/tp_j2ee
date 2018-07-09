@@ -144,7 +144,7 @@ public class ClientDaoImpl implements ClientDao {
 				clients.add(titulaire1);
 				
 				Client titulaire2 = null;
-				if(!resultSet.getString("titulaire_2").equals("null") && resultSet.getString("titulaire_2") != null)
+				if(resultSet.getString("titulaire_2") != null && !resultSet.getString("titulaire_2").equals("null"))
 				{
 					titulaire2 = getClientById(resultSet.getInt("titulaire_2"));
 				}
