@@ -7,7 +7,8 @@ public class Transaction {
 	private int id;
 	private LocalDateTime date;
 	private String dateAffiche;
-	private Compte compteCorrespondant;
+	private Compte compteCrediteur;
+	private Compte compteDebiteur;
 	private float montant;
 	
 	
@@ -26,11 +27,17 @@ public class Transaction {
 	public void setMontant(float montant) {
 		this.montant = montant;
 	}
-	public Compte getCompteCorrespondant() {
-		return compteCorrespondant;
+	public Compte getCompteCrediteur() {
+		return compteCrediteur;
 	}
-	public void setCompteCorrespondant(Compte compteCorrespondant) {
-		this.compteCorrespondant = compteCorrespondant;
+	public void setCompteCrediteur(Compte compteCrediteur) {
+		this.compteCrediteur = compteCrediteur;
+	}
+	public Compte getCompteDebiteur() {
+		return compteDebiteur;
+	}
+	public void setCompteDebiteur(Compte compteDebiteur) {
+		this.compteDebiteur = compteDebiteur;
 	}
 	public LocalDateTime getDate() {
 		return date;

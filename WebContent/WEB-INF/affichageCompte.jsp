@@ -87,19 +87,19 @@
 					    </h5>
 					    <h6 class="card-subtitle mb-2 text-muted  text-center">${ transaction.dateAffiche }</h6>
 					    <p class="card-text">
-					    	<c:if test="${ !empty transaction.compteCorrespondant }">
+					    	<c:if test="${ !empty transaction.compteDebiteur }">
 					    		<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
-						    	${ transaction.compteCorrespondant.proprietaire1.nom } ${ transaction.compteCorrespondant.proprietaire1.prenom }
-						    	<c:if test="${ !empty transaction.compteCorrespondant.proprietaire2 }">
+						    	${ transaction.compteDebiteur.proprietaire1.nom } ${ transaction.compteDebiteur.proprietaire1.prenom }
+						    	<c:if test="${ !empty transaction.compteDebiteur.proprietaire2 }">
 									<br/>
-									${ transaction.compteCorrespondant.proprietaire2.nom } ${ transaction.compteCorrespondant.proprietaire2.prenom }
+									${ transaction.compteDebiteur.proprietaire2.nom } ${ transaction.compteDebiteur.proprietaire2.prenom }
 								</c:if>
 								<hr/>
 								<div>
-									<label class="font-weight-bold">Compte: </label> ${ transaction.compteCorrespondant.libelle }
+									<label class="font-weight-bold">Compte: </label> ${ transaction.compteDebiteur.libelle }
 								</div>
 					    	</c:if>
-					    	<c:if test="${ empty transaction.compteCorrespondant }">
+					    	<c:if test="${ empty transaction.compteDebiteur }">
 					    		<div class="text-center">
 					    			<label class="badge badge-warning">Versement</label>
 					    		</div>
@@ -120,19 +120,19 @@
 					    </h5>
 					    <h6 class="card-subtitle mb-2 text-muted  text-center">${ transaction.dateAffiche }</h6>
 					    <p class="card-text">
-					    	<c:if test="${ !empty transaction.compteCorrespondant}">
+					    	<c:if test="${ !empty transaction.compteCrediteur}">
 					    		<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
-						    	${ transaction.compteCorrespondant.proprietaire1.nom } ${ transaction.compteCorrespondant.proprietaire1.prenom }
-						    	<c:if test="${ !empty transaction.compteCorrespondant.proprietaire2 }">
+						    	${ transaction.compteCrediteur.proprietaire1.nom } ${ transaction.compteCrediteur.proprietaire1.prenom }
+						    	<c:if test="${ !empty transaction.compteCrediteur.proprietaire2 }">
 									<br/>
-									${ transaction.compteCorrespondant.proprietaire2.nom } ${ transaction.compteCorrespondant.proprietaire2.prenom }
+									${ transaction.compteCrediteur.proprietaire2.nom } ${ transaction.compteCrediteur.proprietaire2.prenom }
 								</c:if>
 								<hr/>
 								<div>
-									<label class="font-weight-bold">Compte: </label> ${ transaction.compteCorrespondant.libelle }
+									<label class="font-weight-bold">Compte: </label> ${ transaction.compteCrediteur.libelle }
 								</div>
 					    	</c:if>
-					    	<c:if test="${ empty transaction.compteCorrespondant }">
+					    	<c:if test="${ empty transaction.compteCrediteur }">
 					    		<div class="text-center">
 					    			<label class="badge badge-warning">Retrait</label>
 					    		</div>

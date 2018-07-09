@@ -15,4 +15,5 @@ public interface CompteDao {
 	boolean updateCompte(Compte compte);
 	boolean disableCompte(int compteId);
 	boolean createTransaction(Transaction transaction, Compte compteDebiteur, Compte compteCrediteur);
+	ArrayList<Transaction> getLastTransactionsByClient(Client client, int limite);
 }

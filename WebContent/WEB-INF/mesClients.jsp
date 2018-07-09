@@ -18,7 +18,12 @@
 		<c:forEach items="${ clients }" var="client">
 			<div class="col-sm-6" style="padding-top: 10px" >
 				<div class="card">
-					<h5 class="card-header"><a href="#">${ client.nom } ${ client.prenom }</a></h5>
+					<h5 class="card-header">
+						<form class="form-inline" method="POST" action="<c:url value='/conseiller/client/infos' />">
+							<input type="hidden" name="client" value="${ client.id }" />
+							<button class="btn btn-link">${ client.nom } ${ client.prenom }</button>
+						</form>
+					</h5>
 					<div class="card-body">
 						<ul class="list-group list-group-flush">
 							<c:if test="${ empty client.comptes }">

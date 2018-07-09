@@ -17,16 +17,16 @@ import com.iut.dao.CompteDao;
 import com.iut.dao.DAOFactory;
 
 /**
- * Servlet implementation class AfficherCompte
+ * Servlet implementation class AfficherInfosClient
  */
-@WebServlet("/AfficherCompte")
-public class AfficherCompte extends HttpServlet {
+@WebServlet("/AfficherInfosClient")
+public class AfficherInfosClient extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public static final String CONF_DAO_FACTORY = "daofactory";
 	public static final String ATT_CLIENT		= "client";
-	public static final String ATT_COMPTE		= "compte";
-	public static final String VUE				= "/WEB-INF/affichageCompte.jsp";
+	public static final String ATT_TRANSACTIONS	= "transactions";
+	public static final String VUE				= "/WEB-INF/affichageInfosClient.jsp";
 	
 	private ClientDao clientDao;
 	private CompteDao compteDao;
@@ -39,7 +39,7 @@ public class AfficherCompte extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AfficherCompte() {
+    public AfficherInfosClient() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -48,7 +48,8 @@ public class AfficherCompte extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher( VUE ).forward(request, response);
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -56,41 +57,36 @@ public class AfficherCompte extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Client client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
+		client.setComptes(compteDao.getComptesByClient(client));
+		for(Compte compte : client.getComptes())
+		{
+			ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
+			compte.setProprietaire1(proprietaires.get(0));
+			compte.setProprietaire2(proprietaires.get(1));
+		}
 		
-		Compte compte = compteDao.getCompteById(Integer.parseInt(request.getParameter(ATT_COMPTE)));
-		
-		ArrayList<Client> proprietairesDuCompte = clientDao.getClientsByCompte(compte);
-		compte.setProprietaire1(proprietairesDuCompte.get(0));
-		compte.setProprietaire2(proprietairesDuCompte.get(1));
-		
-		compte.setCredits(compteDao.getCreditsByCompte(compte));
-		for(Transaction transaction : compte.getCredits())
+		ArrayList<Transaction> transactions = compteDao.getLastTransactionsByClient(client, 8);
+		for(Transaction transaction : transactions)
 		{
 			if(transaction.getCompteDebiteur() != null)
 			{
-				ArrayList<Client> proprietaires = clientDao.getClientsByCompte(transaction.getCompteDebiteur());
-				transaction.getCompteDebiteur().setProprietaire1(proprietaires.get(0));
-				transaction.getCompteDebiteur().setProprietaire2(proprietaires.get(1));
+				ArrayList<Client> proprietairesDebiteur = clientDao.getClientsByCompte(transaction.getCompteDebiteur());
+				transaction.getCompteDebiteur().setProprietaire1(proprietairesDebiteur.get(0));
+				transaction.getCompteDebiteur().setProprietaire2(proprietairesDebiteur.get(1));
 			}
-			transaction.setDateAffiche(transaction.afficherDate());
-		}
-		
-		compte.setDebits(compteDao.getDebitsByCompte(compte));
-		for(Transaction transaction : compte.getDebits())
-		{
+			
 			if(transaction.getCompteCrediteur() != null)
 			{
-				ArrayList<Client> proprietaires = clientDao.getClientsByCompte(transaction.getCompteCrediteur());
-				transaction.getCompteCrediteur().setProprietaire1(proprietaires.get(0));
-				transaction.getCompteCrediteur().setProprietaire2(proprietaires.get(1));
+				ArrayList<Client> proprietairesCrediteur = clientDao.getClientsByCompte(transaction.getCompteCrediteur());
+				transaction.getCompteCrediteur().setProprietaire1(proprietairesCrediteur.get(0));
+				transaction.getCompteCrediteur().setProprietaire2(proprietairesCrediteur.get(1));
 			}
-			transaction.setDateAffiche(transaction.afficherDate());
 		}
 		
 		request.setAttribute(ATT_CLIENT, client);
-		request.setAttribute(ATT_COMPTE, compte);
+		request.setAttribute(ATT_TRANSACTIONS, transactions);
 		
-		this.getServletContext().getRequestDispatcher( VUE ).forward(request, response);
+		this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
 	}
 
 }

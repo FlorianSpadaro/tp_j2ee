@@ -16,14 +16,15 @@ import com.iut.beans.Compte;
 import com.iut.beans.Transaction;
 
 public class CompteDaoImpl implements CompteDao{
-	private static final String SQL_GET_COMPTES_CLIENT	= "SELECT * FROM compte WHERE (titulaire_1 = ? OR titulaire_2 = ?) AND actif = true";
-	private static final String SQL_CREATE_COMPTE		= "INSERT INTO compte(libelle, montant, titulaire_1, titulaire_2, decouvert_max) VALUES(?, ?, ?, ?, ?)";
-	private static final String SQL_GET_COMPTE_ID		= "SELECT * FROM compte WHERE id = ?";
-	private static final String SQL_GET_DEBITS_COMPTE	= "SELECT * FROM transaction WHERE compte_debiteur = ? ORDER BY date DESC";
-	private static final String SQL_GET_CREDITS_COMPTE	= "SELECT * FROM transaction WHERE compte_crediteur = ? ORDER BY date DESC";
-	private static final String SQL_UPDATE_COMPTE		= "UPDATE compte SET libelle = ?, montant = ?, decouvert_max = ?, titulaire_1 = ?, titulaire_2 = ? WHERE id = ?";
-	private static final String SQL_DISABLE_COMPTE		= "UPDATE compte SET actif = false WHERE id = ?";
-	private static final String SQL_CREATE_TRANSACTION	= "INSERT INTO transaction(date, montant, compte_debiteur, compte_crediteur) VALUES(NOW(), ?, ?, ?)";
+	private static final String SQL_GET_COMPTES_CLIENT		= "SELECT * FROM compte WHERE (titulaire_1 = ? OR titulaire_2 = ?) AND actif = true";
+	private static final String SQL_CREATE_COMPTE			= "INSERT INTO compte(libelle, montant, titulaire_1, titulaire_2, decouvert_max) VALUES(?, ?, ?, ?, ?)";
+	private static final String SQL_GET_COMPTE_ID			= "SELECT * FROM compte WHERE id = ?";
+	private static final String SQL_GET_DEBITS_COMPTE		= "SELECT * FROM transaction WHERE compte_debiteur = ? ORDER BY date DESC";
+	private static final String SQL_GET_CREDITS_COMPTE		= "SELECT * FROM transaction WHERE compte_crediteur = ? ORDER BY date DESC";
+	private static final String SQL_UPDATE_COMPTE			= "UPDATE compte SET libelle = ?, montant = ?, decouvert_max = ?, titulaire_1 = ?, titulaire_2 = ? WHERE id = ?";
+	private static final String SQL_DISABLE_COMPTE			= "UPDATE compte SET actif = false WHERE id = ?";
+	private static final String SQL_CREATE_TRANSACTION		= "INSERT INTO transaction(date, montant, compte_debiteur, compte_crediteur) VALUES(NOW(), ?, ?, ?)";
+	private static final String SQL_GET_LAST_TRANSACTIONS	= "SELECT * FROM transaction JOIN compte ON compte.id = transaction.compte_debiteur OR compte.id = transaction.compte_crediteur JOIN client ON compte.titulaire_1 = client.id OR compte.titulaire_2 = client.id WHERE client.id = ? LIMIT ?";
 	
 	private DAOFactory daoFactory;
 
@@ -119,17 +120,7 @@ public class CompteDaoImpl implements CompteDao{
 			resultSet = preparedStatement.executeQuery();
 			while(resultSet.next())
 			{
-				Transaction transaction = new Transaction();
-				transaction.setId(resultSet.getInt("id"));
-				transaction.setMontant(resultSet.getFloat("montant"));
-				
-				String dateStr = resultSet.getString("date");
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-				LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
-				transaction.setDate(dateTime);
-				
-				Compte compteCrediteur = getCompteById(resultSet.getInt("compte_crediteur"));
-				transaction.setCompteCorrespondant(compteCrediteur);
+				Transaction transaction = mapTransaction(resultSet);
 				
 				transactions.add(transaction);
 			}
@@ -155,17 +146,7 @@ public class CompteDaoImpl implements CompteDao{
 			resultSet = preparedStatement.executeQuery();
 			while(resultSet.next())
 			{
-				Transaction transaction = new Transaction();
-				transaction.setId(resultSet.getInt("id"));
-				transaction.setMontant(resultSet.getFloat("montant"));
-				
-				String dateStr = resultSet.getString("date");
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-				LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
-				transaction.setDate(dateTime);
-				
-				Compte compteDebiteur = getCompteById(resultSet.getInt("compte_debiteur"));
-				transaction.setCompteCorrespondant(compteDebiteur);
+				Transaction transaction = mapTransaction(resultSet);
 				
 				transactions.add(transaction);
 			}
@@ -250,6 +231,31 @@ public class CompteDaoImpl implements CompteDao{
 		return result;
 	}
 	
+	public ArrayList<Transaction> getLastTransactionsByClient(Client client, int limite)
+	{
+		ArrayList<Transaction> transactions = new ArrayList<>();
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_GET_LAST_TRANSACTIONS, false, client.getId(), limite);
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()){
+				Transaction transaction = mapTransaction(resultSet);
+				
+				transactions.add(transaction);
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(resultSet, preparedStatement, connection);
+		}
+		
+		return transactions;
+	}
+	
 	private Compte map(ResultSet resultSet) throws SQLException{
 		Compte compte = new Compte();
 		compte.setId(resultSet.getInt("id"));
@@ -257,5 +263,26 @@ public class CompteDaoImpl implements CompteDao{
 		compte.setMontant(resultSet.getFloat("montant"));
 		compte.setDecouvertMax(resultSet.getFloat("decouvert_max"));
 		return compte;
+	}
+	
+	private Transaction mapTransaction(ResultSet resultSet) throws SQLException{
+		Transaction transaction = new Transaction();
+		transaction.setId(resultSet.getInt("id"));
+		transaction.setMontant(resultSet.getFloat("montant"));
+		
+		String dateStr = resultSet.getString("date");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
+		transaction.setDate(dateTime);
+		
+		transaction.setDateAffiche(transaction.afficherDate());
+		
+		Compte compteDebiteur = getCompteById(resultSet.getInt("compte_debiteur"));
+		transaction.setCompteDebiteur(compteDebiteur);
+		
+		Compte compteCrediteur = getCompteById(resultSet.getInt("compte_crediteur"));
+		transaction.setCompteCrediteur(compteCrediteur);
+		
+		return transaction;
 	}
 }
