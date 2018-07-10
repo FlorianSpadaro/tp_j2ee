@@ -41,7 +41,10 @@
 						  </ul>
 					</div>
 					<div class="card-footer" >
-						<button class="btn btn-sm btn-primary float-right" >Nouveau Message</button>
+						<form class="form-inline" method="GET" action="<c:url value='/conseiller/client/message' />">
+							<input type="hidden" name="client" value="${ client.id }" />
+							<button class="btn btn-sm btn-primary float-right" >Nouveau Message</button>
+						</form>
 						<form method="GET" action="<c:url value='/conseiller/creationCompte' />" class="form-inline">
 							<input type="hidden" name="client" value="${ client.id }" />
 							<button class="btn btn-sm btn-success float-right" style="margin-right: 10px" >Nouveau Compte</button>

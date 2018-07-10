@@ -12,7 +12,7 @@
 	<div class="container" >
 		<div class="row">
 			<div class="col-xs-12" >
-				<div class="jumbotron"&>
+				<div class="jumbotron">
 					<h1 class="display-1">Bienvenue ${ sessionScope.conseiller.nom } ${ sessionScope.conseiller.prenom }</h1>
 				</div>
 			</div>

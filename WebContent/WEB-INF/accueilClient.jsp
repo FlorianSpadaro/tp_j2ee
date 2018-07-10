@@ -8,5 +8,13 @@
 </head>
 <body>
 	<c:import url="/inc/client/navbar.jsp"></c:import>
+	<br/>
+	<div class="row" style="justify-content: center;">
+		<div class="col-xs-12" >
+			<div class="jumbotron">
+				<h1 class="display-1">Bienvenue ${ sessionScope.client.nom } ${ sessionScope.client.prenom }</h1>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

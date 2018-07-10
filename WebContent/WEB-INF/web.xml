@@ -139,4 +139,20 @@
     <servlet-name>AfficherComptesDecouverts</servlet-name>
     <url-pattern>/conseiller/client/compte/decouvert</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>NouveauMessage</servlet-name>
+    <servlet-class>com.iut.servlets.NouveauMessage</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NouveauMessage</servlet-name>
+    <url-pattern>/conseiller/client/message</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ComptesClient</servlet-name>
+    <servlet-class>com.iut.servlets.ComptesClient</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ComptesClient</servlet-name>
+    <url-pattern>/client/comptes</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Client</title>
+	<title>Mes Comptes</title>
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 	<style>
 		th {
@@ -12,14 +12,10 @@
 	</style>
 </head>
 <body>
-	<c:import url="/inc/conseiller/navbar.jsp"></c:import>
+	<c:import url="/inc/client/navbar.jsp"></c:import>
 	<br/>
 	<div class="container" >
-		<form class="form" method="GET" action="<c:url value='/conseiller/client/message' />">
-			<input type="hidden" name="client" value="${ requestScope.client.id }" />
-			<button class="btn btn-info float-right" >Ecrire Message</button>
-		</form>
-		<h1 class="display-1" >${ requestScope.client.nom } ${ requestScope.client.prenom }</h1>
+		<h1 class="display-1" >Mes Comptes</h1>
 		<br/>
 		<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
 		  <li class="nav-item">
@@ -33,33 +29,26 @@
 		<div class="tab-content" id="pills-tabContent">
 		  <div class="tab-pane fade show active" id="pills-comptes" role="tabpanel" aria-labelledby="pills-comptes-tab">
 		  	<div class="row" style="justify-content: center;">
-		  		<c:forEach items="${ requestScope.client.comptes }" var="compte">
+		  		<c:forEach items="${ requestScope.comptes }" var="compte">
 		  			<div class="card" style="width: 18rem;">
 					  <div class="card-body">
 					    <h5 class="card-title">
-					    	<form class="form-inline" method="POST" action="<c:url value='/conseiller/client/compte' />" style="justify-content: center;">
+					    	<form class="form-inline" method="POST" action="<c:url value='/client/comptes/compte' />" style="justify-content: center;">
 					    		<input type="hidden" name="compte" value="${ compte.id }" />
-					    		<input type="hidden" name="client" value="${ client.id }" />
 					    		<button class="btn btn-link">${ compte.libelle }</button>
 					    	</form>
 					    </h5>
 					    <h6 class="card-subtitle mb-2 text-muted">
-					    	<c:if test="${ compte.proprietaire1.id == requestScope.client.id }">
+					    	<c:if test="${ compte.proprietaire1.id == sessionScope.client.id }">
 					    		<c:if test="${ empty compte.proprietaire2 }">
 					    			Aucun autre propriétaire
 					    		</c:if>
 					    		<c:if test="${ !empty compte.proprietaire2 }">
-					    			<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
-							    		<input type="hidden" name="client" value='${ compte.proprietaire2.id }' />
-							    		<button class="btn btn-link" style="color: black">${ compte.proprietaire2.nom } ${ compte.proprietaire2.prenom }</button>
-							    	</form>
+							    	${ compte.proprietaire2.nom } ${ compte.proprietaire2.prenom }
 					    		</c:if>
 					    	</c:if>
-					    	<c:if test="${ compte.proprietaire2.id == requestScope.client.id }">
-					    		<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
-						    		<input type="hidden" name="client" value='${ compte.proprietaire1.id }' />
-						    		<button class="btn btn-link" style="color: black">${ compte.proprietaire1.nom } ${ compte.proprietaire1.prenom }</button>
-						    	</form>
+					    	<c:if test="${ compte.proprietaire2.id == sessionScope.client.id }">
+					    		${ compte.proprietaire1.nom } ${ compte.proprietaire1.prenom }
 					    	</c:if>
 						</h6>
 						<hr/>
@@ -95,15 +84,9 @@
 					    				<tr>
 					    					<th>Propriétaire: </th>
 					    					<td>
-					    						<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
-										    		<input type="hidden" name="client" value='${ transaction.compteDebiteur.proprietaire1.id }' />
-										    		<button class="btn btn-link" style="color: black">${ transaction.compteDebiteur.proprietaire1.nom } ${ transaction.compteDebiteur.proprietaire1.prenom }</button>
-										    	</form>
+					    						${ transaction.compteDebiteur.proprietaire1.nom } ${ transaction.compteDebiteur.proprietaire1.prenom }
 					    						<c:if test="${ !empty transaction.compteDebiteur.proprietaire2 }">
-					    							<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
-											    		<input type="hidden" name="client" value='${ transaction.compteDebiteur.proprietaire2.id }' />
-											    		<button class="btn btn-link" style="color: black">${ transaction.compteDebiteur.proprietaire2.nom } ${ transaction.compteDebiteur.proprietaire2.prenom }</button>
-											    	</form>
+					    							${ transaction.compteDebiteur.proprietaire2.nom } ${ transaction.compteDebiteur.proprietaire2.prenom }
 					    						</c:if>
 					    					</td>
 					    				</tr>
@@ -129,15 +112,9 @@
 					    				<tr>
 					    					<th>Propriétaire: </th>
 					    					<td>
-					    						<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
-										    		<input type="hidden" name="client" value='${ transaction.compteCrediteur.proprietaire1.id }' />
-										    		<button class="btn btn-link" style="color: black">${ transaction.compteCrediteur.proprietaire1.nom } ${ transaction.compteCrediteur.proprietaire1.prenom }</button>
-										    	</form>
+					    						${ transaction.compteCrediteur.proprietaire1.nom } ${ transaction.compteCrediteur.proprietaire1.prenom }
 					    						<c:if test="${ !empty transaction.compteCrediteur.proprietaire2 }">
-					    							<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
-											    		<input type="hidden" name="client" value='${ transaction.compteCrediteur.proprietaire2.id }' />
-											    		<button class="btn btn-link" style="color: black">${ transaction.compteCrediteur.proprietaire2.nom } ${ transaction.compteCrediteur.proprietaire2.prenom }</button>
-											    	</form>
+					    							${ transaction.compteCrediteur.proprietaire2.nom } ${ transaction.compteCrediteur.proprietaire2.prenom }
 					    						</c:if>
 					    					</td>
 					    				</tr>
