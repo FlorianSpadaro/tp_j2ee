@@ -12,4 +12,5 @@ public interface ClientDao {
 	ArrayList<Client> getClientsByConseiller(Conseiller conseiller);
 	ArrayList<Client> getListeClients();
 	ArrayList<Client> getClientsByCompte(Compte compte);
+	ArrayList<Client> getClientsBySearch(String recherche);
 }

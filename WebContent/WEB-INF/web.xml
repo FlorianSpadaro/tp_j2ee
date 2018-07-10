@@ -123,4 +123,20 @@
     <servlet-name>AfficherInfosClient</servlet-name>
     <url-pattern>/conseiller/client/infos</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>RechercheClients</servlet-name>
+    <servlet-class>com.iut.servlets.RechercheClients</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RechercheClients</servlet-name>
+    <url-pattern>/conseiller/client/recherche</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AfficherComptesDecouverts</servlet-name>
+    <servlet-class>com.iut.servlets.AfficherComptesDecouverts</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AfficherComptesDecouverts</servlet-name>
+    <url-pattern>/conseiller/client/compte/decouvert</url-pattern>
+  </servlet-mapping>
 </web-app>

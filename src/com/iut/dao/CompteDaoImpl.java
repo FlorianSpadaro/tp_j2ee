@@ -13,6 +13,7 @@ import static com.iut.dao.DAOUtilitaire.initialisationRequetePreparee;
 
 import com.iut.beans.Client;
 import com.iut.beans.Compte;
+import com.iut.beans.Conseiller;
 import com.iut.beans.Transaction;
 
 public class CompteDaoImpl implements CompteDao{
@@ -25,6 +26,7 @@ public class CompteDaoImpl implements CompteDao{
 	private static final String SQL_DISABLE_COMPTE			= "UPDATE compte SET actif = false WHERE id = ?";
 	private static final String SQL_CREATE_TRANSACTION		= "INSERT INTO transaction(date, montant, compte_debiteur, compte_crediteur) VALUES(NOW(), ?, ?, ?)";
 	private static final String SQL_GET_LAST_TRANSACTIONS	= "SELECT * FROM transaction JOIN compte ON compte.id = transaction.compte_debiteur OR compte.id = transaction.compte_crediteur JOIN client ON compte.titulaire_1 = client.id OR compte.titulaire_2 = client.id WHERE client.id = ? LIMIT ?";
+	private static final String SQL_GET_COMPTES_DECOUVERTS	= "SELECT * FROM compte JOIN client ON client.id = compte.titulaire_1 OR client.id = compte.titulaire_2 WHERE montant < 0 AND conseiller_id = ? ORDER BY montant";
 	
 	private DAOFactory daoFactory;
 
@@ -254,6 +256,31 @@ public class CompteDaoImpl implements CompteDao{
 		}
 		
 		return transactions;
+	}
+	
+	public ArrayList<Compte> getComptesDecouverts(Conseiller conseiller)
+	{
+		ArrayList<Compte> comptes = new ArrayList<>();
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_GET_COMPTES_DECOUVERTS, false, conseiller.getId());
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next())
+			{
+				Compte compte = map(resultSet);
+				comptes.add(compte);
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(resultSet, preparedStatement, connection);
+		}
+		
+		return comptes;
 	}
 	
 	private Compte map(ResultSet resultSet) throws SQLException{

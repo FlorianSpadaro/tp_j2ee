@@ -19,6 +19,7 @@ public class ClientDaoImpl implements ClientDao {
 	private static final String SQL_GET_CLIENTS_CONSEILLER	= "SELECT * FROM client WHERE conseiller_id = ?";
 	private static final String SQL_GET_CLIENTS				= "SELECT * FROM client ORDER BY nom, prenom";
 	private static final String SQL_GET_CLIENTS_COMPTE		= "SELECT titulaire_1, titulaire_2 FROM compte WHERE id = ?";
+	private static final String SQL_GET_CLIENTS_SEARCH		= "SELECT * FROM client WHERE UPPER(nom) LIKE ? OR UPPER(prenom) LIKE ?";
 	
 	private DAOFactory daoFactory;
 	
@@ -149,6 +150,33 @@ public class ClientDaoImpl implements ClientDao {
 					titulaire2 = getClientById(resultSet.getInt("titulaire_2"));
 				}
 				clients.add(titulaire2);
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(resultSet, preparedStatement, connection);
+		}
+		
+		return clients;
+	}
+	
+	public ArrayList<Client> getClientsBySearch(String recherche)
+	{
+		ArrayList<Client> clients = new ArrayList<>();
+		
+		recherche = "%" + recherche + "%";
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_GET_CLIENTS_SEARCH, false, recherche, recherche);
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next())
+			{
+				Client client = map(resultSet);
+				clients.add(client);
 			}
 		}catch(SQLException e) {
 			throw new DAOException(e.getMessage());

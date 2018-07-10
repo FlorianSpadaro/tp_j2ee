@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.iut.beans.Client;
 import com.iut.beans.Compte;
+import com.iut.beans.Conseiller;
 import com.iut.beans.Transaction;
 
 public interface CompteDao {
@@ -16,4 +17,5 @@ public interface CompteDao {
 	boolean disableCompte(int compteId);
 	boolean createTransaction(Transaction transaction, Compte compteDebiteur, Compte compteCrediteur);
 	ArrayList<Transaction> getLastTransactionsByClient(Client client, int limite);
+	ArrayList<Compte> getComptesDecouverts(Conseiller conseiller);
 }

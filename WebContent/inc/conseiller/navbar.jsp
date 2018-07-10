@@ -15,14 +15,14 @@
         <a class="nav-link" href="<c:url value='/conseiller/client' />">Mes Clients</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Découverts</a>
+        <a class="nav-link" href="<c:url value='/conseiller/client/compte/decouvert' />">Découverts</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Messagerie</a>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Rechercher un client" aria-label="Search">
+    <form class="form-inline my-2 my-lg-0" action="<c:url value='/conseiller/client/recherche' />" method="POST">
+      <input class="form-control mr-sm-2" type="search" placeholder="Rechercher un client" aria-label="Search" name="recherche">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
     </form>
   </div>
