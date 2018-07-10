@@ -56,6 +56,7 @@ public class AfficherInfosClient extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("TEST: " + request.getParameter(ATT_CLIENT));
 		Client client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
 		client.setComptes(compteDao.getComptesByClient(client));
 		for(Compte compte : client.getComptes())

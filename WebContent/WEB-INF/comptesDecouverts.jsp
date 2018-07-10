@@ -18,7 +18,7 @@
 			<c:forEach items="${ requestScope.comptes }" var="compte" >
 				<div class="card bg-light mb-3 col-md-3" style="margin: 5px;">
 				  <div class="card-header">
-				  	<form class="form-inline" action="<c:url value='/conseiller/client/compte' />" method="POST">
+				  	<form class="form-inline" action="<c:url value='/conseiller/client/compte' />" met>
 				  		<input type="hidden" name="client" value="${ compte.proprietaire1.id }" />
 				  		<input type="hidden" name="compte" value="${ compte.id }" />
 				  		<button class="btn btn-link">${ compte.libelle }</button>
@@ -27,10 +27,15 @@
 				  <div class="card-body">
 				    <h5 class="card-title" style="color: red;">${ compte.montant }&euro;</h5>
 				    <p class="card-text">
-				    	${ compte.proprietaire1.nom } ${ compte.proprietaire1.prenom }
+				    	<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
+				    		<input type="hidden" name="client" value='${ compte.proprietaire1.id }' />
+				    		<button class="btn btn-link" style="color: black">${ compte.proprietaire1.nom } ${ compte.proprietaire1.prenom }</button>
+				    	</form>
 				    	<c:if test="${ !empty compte.proprietaire2 }">
-				    		<br/>
-				    		${ compte.proprietaire2.nom } ${ compte.proprietaire2.prenom }
+				    		<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
+					    		<input type="hidden" name="client" value='${ compte.proprietaire2.id }' />
+					    		<button class="btn btn-link" style="color: black">${ compte.proprietaire2.nom } ${ compte.proprietaire2.prenom }</button>
+					    	</form>
 				    	</c:if>
 				    </p>
 				  </div>

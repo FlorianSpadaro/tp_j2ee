@@ -34,10 +34,15 @@
 					<tr>
 						<th class="font-weight-bold">Propriétaire(s): </th>
 						<td>
-							${ requestScope.compte.proprietaire1.nom } ${ requestScope.compte.proprietaire1.prenom }
+							<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
+					    		<input type="hidden" name="client" value='${ requestScope.compte.proprietaire1.id }' />
+					    		<button class="btn btn-link" style="color: black">${ requestScope.compte.proprietaire1.nom } ${ requestScope.compte.proprietaire1.prenom }</button>
+					    	</form>
 							<c:if test="${ !empty requestScope.compte.proprietaire2 }">
-								<br/>
-								${ requestScope.compte.proprietaire2.nom } ${ requestScope.compte.proprietaire2.prenom }
+								<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
+						    		<input type="hidden" name="client" value='${ requestScope.compte.proprietaire2.id }' />
+						    		<button class="btn btn-link" style="color: black">${ requestScope.compte.proprietaire2.nom } ${ requestScope.compte.proprietaire2.prenom }</button>
+						    	</form>
 							</c:if>
 						</td>
 					</tr>
@@ -89,10 +94,15 @@
 					    <p class="card-text">
 					    	<c:if test="${ !empty transaction.compteDebiteur }">
 					    		<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
-						    	${ transaction.compteDebiteur.proprietaire1.nom } ${ transaction.compteDebiteur.proprietaire1.prenom }
+					    		<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
+						    		<input type="hidden" name="client" value='${ transaction.compteDebiteur.proprietaire1.id }' />
+						    		<button class="btn btn-link" style="color: black">${ transaction.compteDebiteur.proprietaire1.nom } ${ transaction.compteDebiteur.proprietaire1.prenom }</button>
+						    	</form>
 						    	<c:if test="${ !empty transaction.compteDebiteur.proprietaire2 }">
-									<br/>
-									${ transaction.compteDebiteur.proprietaire2.nom } ${ transaction.compteDebiteur.proprietaire2.prenom }
+									<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
+							    		<input type="hidden" name="client" value='${ transaction.compteDebiteur.proprietaire2.id }' />
+							    		<button class="btn btn-link" style="color: black">${ transaction.compteDebiteur.proprietaire2.nom } ${ transaction.compteDebiteur.proprietaire2.prenom }</button>
+							    	</form>
 								</c:if>
 								<hr/>
 								<div>
@@ -122,10 +132,15 @@
 					    <p class="card-text">
 					    	<c:if test="${ !empty transaction.compteCrediteur}">
 					    		<h6 class="display-6 text-center"><label class="badge badge-secondary">Correspondant: </label></h6>
-						    	${ transaction.compteCrediteur.proprietaire1.nom } ${ transaction.compteCrediteur.proprietaire1.prenom }
+					    		<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
+						    		<input type="hidden" name="client" value='${ transaction.compteCrediteur.proprietaire1.id }' />
+						    		<button class="btn btn-link" style="color: black">${ transaction.compteCrediteur.proprietaire1.nom } ${ transaction.compteCrediteur.proprietaire1.prenom }</button>
+						    	</form>
 						    	<c:if test="${ !empty transaction.compteCrediteur.proprietaire2 }">
-									<br/>
-									${ transaction.compteCrediteur.proprietaire2.nom } ${ transaction.compteCrediteur.proprietaire2.prenom }
+									<form class="form-inline" action="<c:url value='/conseiller/client/infos' />" method="POST">
+							    		<input type="hidden" name="client" value='${ transaction.compteCrediteur.proprietaire2.id }' />
+							    		<button class="btn btn-link" style="color: black">${ transaction.compteCrediteur.proprietaire2.nom } ${ transaction.compteCrediteur.proprietaire2.prenom }</button>
+							    	</form>
 								</c:if>
 								<hr/>
 								<div>
