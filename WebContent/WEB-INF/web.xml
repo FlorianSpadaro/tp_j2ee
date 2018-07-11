@@ -155,4 +155,20 @@
     <servlet-name>ComptesClient</servlet-name>
     <url-pattern>/client/comptes</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>DeconnexionClient</servlet-name>
+    <servlet-class>com.iut.servlets.DeconnexionClient</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeconnexionClient</servlet-name>
+    <url-pattern>/client/deconnexion</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>DeconnexionConseiller</servlet-name>
+    <servlet-class>com.iut.servlets.DeconnexionConseiller</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeconnexionConseiller</servlet-name>
+    <url-pattern>/conseiller/deconnexion</url-pattern>
+  </servlet-mapping>
 </web-app>

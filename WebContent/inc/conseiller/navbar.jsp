@@ -20,6 +20,9 @@
       <li class="nav-item">
         <a class="nav-link" href="#">Messagerie</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<c:url value='/conseiller/deconnexion' />" style="color: red;">Déconnexion</a>
+      </li>
     </ul>
     <form class="form-inline my-2 my-lg-0" action="<c:url value='/conseiller/client/recherche' />" method="POST">
       <input class="form-control mr-sm-2" type="search" placeholder="Rechercher un client" aria-label="Search" name="recherche">
