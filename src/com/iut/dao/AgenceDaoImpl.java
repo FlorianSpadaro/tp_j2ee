@@ -69,6 +69,7 @@ public class AgenceDaoImpl implements AgenceDao {
 		Agence agence = new Agence();
 		agence.setId(resultSet.getInt("id"));
 		agence.setLibelle(resultSet.getString("libelle"));
+		agence.setTelephone(resultSet.getString("telephone"));
 		agence.setAdresse(resultSet.getString("adresse"));
 		agence.setCodePostal(resultSet.getString("code_postal"));
 		agence.setVille(resultSet.getString("ville"));

@@ -11,7 +11,7 @@ import com.iut.beans.Transaction;
 import com.iut.dao.ClientDao;
 import com.iut.dao.CompteDao;
 
-public class VersementForm {
+public class RetraitForm {
 	private static final String ATT_MONTANT	= "montant";
 	private static final String ATT_COMPTE	= "compte";
 	
@@ -19,75 +19,82 @@ public class VersementForm {
 	private String resultat;
 	private CompteDao compteDao;
 	private ClientDao clientDao;
-	
-	public VersementForm(CompteDao compteDao, ClientDao clientDao) {
+	public RetraitForm(CompteDao compteDao, ClientDao clientDao) {
 		super();
 		this.compteDao = compteDao;
 		this.clientDao = clientDao;
 		this.erreurs = new HashMap<>();
 	}
-
 	public HashMap<String, String> getErreurs() {
 		return erreurs;
 	}
-
 	public void setErreurs(HashMap<String, String> erreurs) {
 		this.erreurs = erreurs;
 	}
-
 	public String getResultat() {
 		return resultat;
 	}
-
 	public void setResultat(String resultat) {
 		this.resultat = resultat;
 	}
-    
-    public void versement(HttpServletRequest request) {
-    	String montantString = getValeurChamp(request, ATT_MONTANT);
-    	
-    	try {
+	
+	public void retrait(HttpServletRequest request)
+	{
+		String montantString = getValeurChamp(request, ATT_MONTANT);
+		
+		try {
 			validationMontant(montantString);
 		}catch(Exception e) {
 			setErreur(ATT_MONTANT, e.getMessage());
 		}
-    	
-    	if(erreurs.isEmpty())
-    	{
-    		Float montant = Float.parseFloat(montantString);
-    		Compte compte = compteDao.getCompteById(Integer.parseInt(getValeurChamp(request, ATT_COMPTE)));
-    		
-    		ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
-    		compte.setProprietaire1(proprietaires.get(0));
-    		compte.setProprietaire2(proprietaires.get(1));
-    		
-    		Transaction transaction = new Transaction();
-    		transaction.setMontant(montant);
-    		
-    		int transactionId = compteDao.createTransaction(transaction, null, compte);
-    		if(transactionId > 0)
-    		{
-    			Float nouveauMontant = montant + compte.getMontant();
-        		compte.setMontant(nouveauMontant);
-        		boolean result = compteDao.updateCompte(compte);
-        		if(result)
+		
+		if(erreurs.isEmpty())
+		{
+			Float montant = Float.parseFloat(montantString);
+			
+			Compte compte = compteDao.getCompteById(Integer.parseInt(getValeurChamp(request, ATT_COMPTE)));
+			ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
+			compte.setProprietaire1(proprietaires.get(0));
+			compte.setProprietaire2(proprietaires.get(1));
+			try {
+    			validationCompteDebiteur(compte, montant);
+    		}catch(Exception e) {
+    			setErreur(ATT_COMPTE, e.getMessage());
+    		}
+			
+			if(erreurs.isEmpty())
+			{
+				Transaction transaction = new Transaction();
+        		transaction.setMontant(montant);
+        		
+        		int transactionId = compteDao.createTransaction(transaction, compte, null);
+        		if(transactionId > 0)
         		{
-        			resultat = "Versement effectué avec succès";
+        			Float nouveauMontant = compte.getMontant() - montant;
+        			compte.setMontant(nouveauMontant);
+        			
+        			boolean resultatRetrait = compteDao.updateCompte(compte);
+        			if(resultatRetrait)
+        			{
+        				resultat = "Retrait effectué avec succès";
+        			}
+        			else {
+        				compteDao.removeTransaction(transactionId);
+        				resultat = "Retrait échoué";
+        			}
         		}
         		else {
-        			compteDao.removeTransaction(transactionId);
-        			resultat = "Versement échoué";
+        			resultat = "Retrait échoué";
         		}
-    		}
-    		else {
-    			resultat = "Versement échoué";
-    		}
-    		
-    	}
-    	else {
-    		resultat = "Versement échoué. Veuillez vérifier vos données";
-    	}
-    }
+			}
+			else {
+				resultat = "Retrait échoué: Solde du compte insuffisant";
+			}
+		}
+		else {
+			resultat = "Retrait échoué: Montant incorrect";
+		}
+	}
 	
 	private void validationMontant( String montant ) throws Exception{
 		int difference = 0;
@@ -104,17 +111,19 @@ public class VersementForm {
 		}
 	}
 	
-	/*
-     * Ajoute un message correspondant au champ spécifié à la map des erreurs.
-     */
+	private void validationCompteDebiteur(Compte compte, Float montant) throws Exception{
+		Float nouveauMontant = compte.getMontant() - montant;
+		if(nouveauMontant < -(compte.getDecouvertMax()))
+		{
+			throw new Exception("Solde du compte insuffisant");
+		}
+	}
+
     private void setErreur( String champ, String message ) {
         erreurs.put( champ, message );
     }
-	
-	/*
-     * Méthode utilitaire qui retourne null si un champ est vide, et son contenu
-     * sinon.
-     */
+
+    
     private static String getValeurChamp( HttpServletRequest request, String nomChamp ) {
         String valeur = request.getParameter( nomChamp );
         if ( valeur == null || valeur.trim().length() == 0 ) {

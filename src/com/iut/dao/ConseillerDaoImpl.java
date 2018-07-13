@@ -8,10 +8,12 @@ import java.sql.SQLException;
 import static com.iut.dao.DAOUtilitaire.fermeturesSilencieuses;
 import static com.iut.dao.DAOUtilitaire.initialisationRequetePreparee;
 
+import com.iut.beans.Client;
 import com.iut.beans.Conseiller;
 
 public class ConseillerDaoImpl implements ConseillerDao {
-	private static final String SQL_CONNEXION 		= "SELECT * FROM conseiller WHERE login = ? AND password = ?";
+	private static final String SQL_CONNEXION 				= "SELECT * FROM conseiller WHERE login = ? AND password = ?";
+	private static final String SQL_GET_CONSEILLER_CLIENT	= "SELECT conseiller.* FROM conseiller JOIN client ON client.conseiller_id = conseiller.id WHERE client.id = ?";
 	
 	private DAOFactory daoFactory;
 
@@ -29,6 +31,30 @@ public class ConseillerDaoImpl implements ConseillerDao {
 		try {
 			connexion = daoFactory.getConnection();
 			preparedStatement = initialisationRequetePreparee(connexion, SQL_CONNEXION, false, login, password);
+			resultSet = preparedStatement.executeQuery();
+			if(resultSet.next())
+			{
+				conseiller = map(resultSet);
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(resultSet, preparedStatement, connexion);
+		}
+		
+		return conseiller;
+	}
+	
+	public Conseiller getConseillerByClient(Client client)
+	{
+		Conseiller conseiller = null;
+		
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connexion = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connexion, SQL_GET_CONSEILLER_CLIENT, false, client.getId());
 			resultSet = preparedStatement.executeQuery();
 			if(resultSet.next())
 			{

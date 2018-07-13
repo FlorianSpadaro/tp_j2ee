@@ -27,6 +27,7 @@ public class CompteDaoImpl implements CompteDao{
 	private static final String SQL_CREATE_TRANSACTION		= "INSERT INTO transaction(date_transaction, montant, compte_debiteur, compte_crediteur) VALUES(CURRENT_DATE, ?, ?, ?)";
 	private static final String SQL_GET_LAST_TRANSACTIONS	= "SELECT * FROM transaction JOIN compte ON compte.id = transaction.compte_debiteur OR compte.id = transaction.compte_crediteur JOIN client ON compte.titulaire_1 = client.id OR compte.titulaire_2 = client.id WHERE client.id = ? AND ROWNUM <= ? ORDER BY date_transaction";
 	private static final String SQL_GET_COMPTES_DECOUVERTS	= "SELECT UNIQUE compte.ID, compte.LIBELLE, compte.MONTANT, compte.DECOUVERT_MAX, compte.TITULAIRE_1, compte.TITULAIRE_2, compte.ACTIF FROM compte JOIN client ON client.id = compte.titulaire_1 OR client.id = compte.titulaire_2 WHERE montant < 0 AND conseiller_id = ? ORDER BY montant";
+	private static final String SQL_DELETE_TRANSACTION		= "DELETE FROM transaction WHERE id = ?";
 	
 	private DAOFactory daoFactory;
 
@@ -209,28 +210,25 @@ public class CompteDaoImpl implements CompteDao{
 		return result;
 	}
 	
-	public boolean createTransaction(Transaction transaction, Compte compteDebiteur, Compte compteCrediteur)
+	public int createTransaction(Transaction transaction, Compte compteDebiteur, Compte compteCrediteur)
 	{
-		boolean result = false;
+		int transactionId = 0;
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		int resultset;
 		try {
 			connection = daoFactory.getConnection();
-			preparedStatement = initialisationRequetePreparee(connection, SQL_CREATE_TRANSACTION, false, transaction.getMontant(), (compteDebiteur == null ? null : compteDebiteur.getId() ), (compteCrediteur == null ? null : compteCrediteur.getId() ));
-			resultset = preparedStatement.executeUpdate();
-			if(resultset > 0)
-			{
-				result = true;
-			}
+			preparedStatement = initialisationRequetePreparee(connection, SQL_CREATE_TRANSACTION, true, transaction.getMontant(), (compteDebiteur == null ? null : compteDebiteur.getId() ), (compteCrediteur == null ? null : compteCrediteur.getId() ));
+			transactionId = preparedStatement.executeUpdate();
+			
 		}catch(SQLException e) {
 			throw new DAOException(e.getMessage());
 		}finally {
 			fermeturesSilencieuses(preparedStatement, connection);
 		}
 		
-		return result;
+		return transactionId;
 	}
 	
 	public ArrayList<Transaction> getLastTransactionsByClient(Client client, int limite)
@@ -281,6 +279,30 @@ public class CompteDaoImpl implements CompteDao{
 		}
 		
 		return comptes;
+	}
+	
+	public boolean removeTransaction(int transactionId)
+	{
+		boolean result = false;
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		int resultSet;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_DELETE_TRANSACTION, false, transactionId);
+			resultSet = preparedStatement.executeUpdate();
+			if(resultSet > 0)
+			{
+				result = true;
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(preparedStatement, connection);
+		}
+		
+		return result;
 	}
 	
 	private Compte map(ResultSet resultSet) throws SQLException{

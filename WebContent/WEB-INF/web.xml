@@ -180,4 +180,12 @@
     <servlet-name>AfficherInfosAgence</servlet-name>
     <url-pattern>/client/agence</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>Retrait</servlet-name>
+    <servlet-class>com.iut.servlets.Retrait</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Retrait</servlet-name>
+    <url-pattern>/client/comptes/compte/retrait</url-pattern>
+  </servlet-mapping>
 </web-app>

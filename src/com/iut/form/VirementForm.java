@@ -74,8 +74,8 @@ public class VirementForm {
         		Transaction transaction = new Transaction();
         		transaction.setMontant(montant);
         		
-        		boolean resultatTransaction = compteDao.createTransaction(transaction, compteDebiteur, compteCrediteur);
-        		if(resultatTransaction)
+        		int transactionId = compteDao.createTransaction(transaction, compteDebiteur, compteCrediteur);
+        		if(transactionId > 0)
         		{
         			Float nouveauMontantDebiteur = compteDebiteur.getMontant() - montant;
         			compteDebiteur.setMontant(nouveauMontantDebiteur);
@@ -95,9 +95,14 @@ public class VirementForm {
         					nouveauMontantCrediteur = compteCrediteur.getMontant() - montant;
         					compteCrediteur.setMontant(nouveauMontantCrediteur);
         					compteDao.updateCompte(compteCrediteur);
+        					
+        					compteDao.removeTransaction(transactionId);
+        					
+        					resultat = "Virement échoué";
         				}
         			}
         			else {
+        				compteDao.removeTransaction(transactionId);
         				resultat = "Virement échoué";
         			}
         		}

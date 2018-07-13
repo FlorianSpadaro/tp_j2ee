@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.iut.beans.Agence;
 import com.iut.beans.Client;
+import com.iut.beans.Conseiller;
 import com.iut.dao.AgenceDao;
+import com.iut.dao.ConseillerDao;
 import com.iut.dao.DAOFactory;
 
 /**
@@ -23,11 +25,14 @@ public class AfficherInfosAgence extends HttpServlet {
 	public static final String CONF_DAO_FACTORY = "daofactory";
 	private static final String ATT_CLIENT		= "client";
 	private static final String ATT_AGENCE		= "agence";
+	private static final String ATT_CONSEILLER	= "conseiller";
 	
 	private AgenceDao agenceDao;
+	private ConseillerDao conseillerDao;
 	
 	public void init() throws ServletException {
         this.agenceDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getAgenceDao();
+        this.conseillerDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getConseillerDao();
     }
        
     /**
@@ -44,8 +49,10 @@ public class AfficherInfosAgence extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Client client = (Client) request.getSession().getAttribute(ATT_CLIENT);
 		Agence agence = agenceDao.getAgenceByClient(client);
+		Conseiller conseiller = conseillerDao.getConseillerByClient(client);
 		
 		request.setAttribute(ATT_AGENCE, agence);
+		request.setAttribute(ATT_CONSEILLER, conseiller);
 		
 		this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
 	}
