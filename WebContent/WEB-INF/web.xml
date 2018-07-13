@@ -74,6 +74,7 @@
   <servlet-mapping>
     <servlet-name>AffichageCompte</servlet-name>
     <url-pattern>/conseiller/client/compte</url-pattern>
+    <url-pattern>/client/comptes/compte</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>ModificationCompte</servlet-name>
@@ -170,5 +171,13 @@
   <servlet-mapping>
     <servlet-name>DeconnexionConseiller</servlet-name>
     <url-pattern>/conseiller/deconnexion</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AfficherInfosAgence</servlet-name>
+    <servlet-class>com.iut.servlets.AfficherInfosAgence</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AfficherInfosAgence</servlet-name>
+    <url-pattern>/client/agence</url-pattern>
   </servlet-mapping>
 </web-app>

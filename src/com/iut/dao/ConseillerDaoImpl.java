@@ -35,7 +35,7 @@ public class ConseillerDaoImpl implements ConseillerDao {
 				conseiller = map(resultSet);
 			}
 		}catch(SQLException e) {
-			throw new DAOException(e);
+			throw new DAOException(e.getMessage());
 		}finally {
 			fermeturesSilencieuses(resultSet, preparedStatement, connexion);
 		}

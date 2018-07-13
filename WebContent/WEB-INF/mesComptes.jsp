@@ -35,6 +35,7 @@
 					    <h5 class="card-title">
 					    	<form class="form-inline" method="POST" action="<c:url value='/client/comptes/compte' />" style="justify-content: center;">
 					    		<input type="hidden" name="compte" value="${ compte.id }" />
+					    		<input type="hidden" name="client" value="${ sessionScope.client.id }" />
 					    		<button class="btn btn-link">${ compte.libelle }</button>
 					    	</form>
 					    </h5>

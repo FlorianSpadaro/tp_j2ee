@@ -26,7 +26,9 @@ public class AfficherCompte extends HttpServlet {
 	public static final String CONF_DAO_FACTORY = "daofactory";
 	public static final String ATT_CLIENT		= "client";
 	public static final String ATT_COMPTE		= "compte";
+	public static final String ATT_CONSEILLER	= "conseiller";
 	public static final String VUE				= "/WEB-INF/affichageCompte.jsp";
+	public static final String VUE_CLIENT		= "/WEB-INF/affichageCompteClient.jsp";
 	
 	private ClientDao clientDao;
 	private CompteDao compteDao;
@@ -48,7 +50,7 @@ public class AfficherCompte extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher( VUE ).forward(request, response);
+		//this.getServletContext().getRequestDispatcher( VUE ).forward(request, response);
 	}
 
 	/**
@@ -90,7 +92,13 @@ public class AfficherCompte extends HttpServlet {
 		request.setAttribute(ATT_CLIENT, client);
 		request.setAttribute(ATT_COMPTE, compte);
 		
-		this.getServletContext().getRequestDispatcher( VUE ).forward(request, response);
+		if(request.getSession().getAttribute(ATT_CONSEILLER) != null)
+		{
+			this.getServletContext().getRequestDispatcher( VUE ).forward(request, response);
+		}
+		else {
+			this.getServletContext().getRequestDispatcher( VUE_CLIENT ).forward(request, response);
+		}
 	}
 
 }

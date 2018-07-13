@@ -79,4 +79,8 @@ public class DAOFactory {
     public CompteDao getCompteDao() {
     	return new CompteDaoImpl(this);
     }
+    
+    public AgenceDao getAgenceDao() {
+    	return new AgenceDaoImpl(this);
+    }
 }

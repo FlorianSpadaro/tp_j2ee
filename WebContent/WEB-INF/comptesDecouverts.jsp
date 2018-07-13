@@ -18,7 +18,7 @@
 			<c:forEach items="${ requestScope.comptes }" var="compte" >
 				<div class="card bg-light mb-3 col-md-3" style="margin: 5px;">
 				  <div class="card-header">
-				  	<form class="form-inline" action="<c:url value='/conseiller/client/compte' />" met>
+				  	<form class="form-inline" action="<c:url value='/conseiller/client/compte' />" method="POST">
 				  		<input type="hidden" name="client" value="${ compte.proprietaire1.id }" />
 				  		<input type="hidden" name="compte" value="${ compte.id }" />
 				  		<button class="btn btn-link">${ compte.libelle }</button>

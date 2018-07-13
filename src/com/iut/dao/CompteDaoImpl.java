@@ -17,16 +17,16 @@ import com.iut.beans.Conseiller;
 import com.iut.beans.Transaction;
 
 public class CompteDaoImpl implements CompteDao{
-	private static final String SQL_GET_COMPTES_CLIENT		= "SELECT * FROM compte WHERE (titulaire_1 = ? OR titulaire_2 = ?) AND actif = true";
+	private static final String SQL_GET_COMPTES_CLIENT		= "SELECT * FROM compte WHERE (titulaire_1 = ? OR titulaire_2 = ?) AND actif = 1";
 	private static final String SQL_CREATE_COMPTE			= "INSERT INTO compte(libelle, montant, titulaire_1, titulaire_2, decouvert_max) VALUES(?, ?, ?, ?, ?)";
 	private static final String SQL_GET_COMPTE_ID			= "SELECT * FROM compte WHERE id = ?";
-	private static final String SQL_GET_DEBITS_COMPTE		= "SELECT * FROM transaction WHERE compte_debiteur = ? ORDER BY date DESC";
-	private static final String SQL_GET_CREDITS_COMPTE		= "SELECT * FROM transaction WHERE compte_crediteur = ? ORDER BY date DESC";
+	private static final String SQL_GET_DEBITS_COMPTE		= "SELECT * FROM transaction WHERE compte_debiteur = ? ORDER BY date_transaction DESC";
+	private static final String SQL_GET_CREDITS_COMPTE		= "SELECT * FROM transaction WHERE compte_crediteur = ? ORDER BY date_transaction DESC";
 	private static final String SQL_UPDATE_COMPTE			= "UPDATE compte SET libelle = ?, montant = ?, decouvert_max = ?, titulaire_1 = ?, titulaire_2 = ? WHERE id = ?";
-	private static final String SQL_DISABLE_COMPTE			= "UPDATE compte SET actif = false WHERE id = ?";
-	private static final String SQL_CREATE_TRANSACTION		= "INSERT INTO transaction(date, montant, compte_debiteur, compte_crediteur) VALUES(NOW(), ?, ?, ?)";
-	private static final String SQL_GET_LAST_TRANSACTIONS	= "SELECT * FROM transaction JOIN compte ON compte.id = transaction.compte_debiteur OR compte.id = transaction.compte_crediteur JOIN client ON compte.titulaire_1 = client.id OR compte.titulaire_2 = client.id WHERE client.id = ? LIMIT ?";
-	private static final String SQL_GET_COMPTES_DECOUVERTS	= "SELECT * FROM compte JOIN client ON client.id = compte.titulaire_1 OR client.id = compte.titulaire_2 WHERE montant < 0 AND conseiller_id = ? ORDER BY montant";
+	private static final String SQL_DISABLE_COMPTE			= "UPDATE compte SET actif = 0 WHERE id = ?";
+	private static final String SQL_CREATE_TRANSACTION		= "INSERT INTO transaction(date_transaction, montant, compte_debiteur, compte_crediteur) VALUES(CURRENT_DATE, ?, ?, ?)";
+	private static final String SQL_GET_LAST_TRANSACTIONS	= "SELECT * FROM transaction JOIN compte ON compte.id = transaction.compte_debiteur OR compte.id = transaction.compte_crediteur JOIN client ON compte.titulaire_1 = client.id OR compte.titulaire_2 = client.id WHERE client.id = ? AND ROWNUM <= ? ORDER BY date_transaction";
+	private static final String SQL_GET_COMPTES_DECOUVERTS	= "SELECT UNIQUE compte.ID, compte.LIBELLE, compte.MONTANT, compte.DECOUVERT_MAX, compte.TITULAIRE_1, compte.TITULAIRE_2, compte.ACTIF FROM compte JOIN client ON client.id = compte.titulaire_1 OR client.id = compte.titulaire_2 WHERE montant < 0 AND conseiller_id = ? ORDER BY montant";
 	
 	private DAOFactory daoFactory;
 
@@ -297,7 +297,7 @@ public class CompteDaoImpl implements CompteDao{
 		transaction.setId(resultSet.getInt("id"));
 		transaction.setMontant(resultSet.getFloat("montant"));
 		
-		String dateStr = resultSet.getString("date");
+		String dateStr = resultSet.getString("date_transaction").substring(0, 19);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
 		transaction.setDate(dateTime);

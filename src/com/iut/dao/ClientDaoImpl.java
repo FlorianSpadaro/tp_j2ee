@@ -164,7 +164,7 @@ public class ClientDaoImpl implements ClientDao {
 	{
 		ArrayList<Client> clients = new ArrayList<>();
 		
-		recherche = "%" + recherche + "%";
+		recherche = "%" + recherche.toUpperCase() + "%";
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;

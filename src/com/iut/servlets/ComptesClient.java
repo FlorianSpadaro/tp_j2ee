@@ -61,13 +61,19 @@ public class ComptesClient extends HttpServlet {
 		ArrayList<Transaction> transactions = compteDao.getLastTransactionsByClient(client, 8);
 		for(Transaction transaction : transactions )
 		{
-			ArrayList<Client> proprietairesDebiteur = clientDao.getClientsByCompte(transaction.getCompteDebiteur());
-			transaction.getCompteDebiteur().setProprietaire1(proprietairesDebiteur.get(0));
-			transaction.getCompteDebiteur().setProprietaire2(proprietairesDebiteur.get(1));
+			if(transaction.getCompteDebiteur() != null)
+			{
+				ArrayList<Client> proprietairesDebiteur = clientDao.getClientsByCompte(transaction.getCompteDebiteur());
+				transaction.getCompteDebiteur().setProprietaire1(proprietairesDebiteur.get(0));
+				transaction.getCompteDebiteur().setProprietaire2(proprietairesDebiteur.get(1));
+			}
 			
-			ArrayList<Client> proprietairesCrediteur = clientDao.getClientsByCompte(transaction.getCompteCrediteur());
-			transaction.getCompteCrediteur().setProprietaire1(proprietairesCrediteur.get(0));
-			transaction.getCompteCrediteur().setProprietaire2(proprietairesCrediteur.get(1));
+			if(transaction.getCompteCrediteur() != null)
+			{
+				ArrayList<Client> proprietairesCrediteur = clientDao.getClientsByCompte(transaction.getCompteCrediteur());
+				transaction.getCompteCrediteur().setProprietaire1(proprietairesCrediteur.get(0));
+				transaction.getCompteCrediteur().setProprietaire2(proprietairesCrediteur.get(1));
+			}
 		}
 		
 		request.setAttribute(ATT_COMPTES, comptes);
