@@ -48,7 +48,7 @@ public class ConnexionForm {
 	{
 		/* Récupération des champs du formulaire */
 		String login = getValeurChamp(request, CHAMP_LOGIN);
-		String passord = getValeurChamp(request, CHAMP_PASSWORD);
+		String password = getValeurChamp(request, CHAMP_PASSWORD);
 		
 		Client client = null;
 		
@@ -59,7 +59,7 @@ public class ConnexionForm {
 			setErreur(CHAMP_LOGIN, e.getMessage());
 		}
 		try {
-			validationPassword(passord);
+			validationPassword(password);
 		}catch(Exception e) {
 			setErreur(CHAMP_PASSWORD, e.getMessage());
 		}
@@ -67,7 +67,7 @@ public class ConnexionForm {
 		//Si le login et le mot de passe sont valides, alors on utilise la fonction de connexion du ClientDao
 		if(erreurs.isEmpty())
 		{
-			client = clientDao.connexion(login, passord);
+			client = clientDao.connexion(login, EncryptageForm.encryptPassword(password));
 			
 			if(client == null)
 			{
@@ -85,7 +85,7 @@ public class ConnexionForm {
 	{
 		/* Récupération des champs du formulaire */
 		String login = getValeurChamp(request, CHAMP_LOGIN);
-		String passord = getValeurChamp(request, CHAMP_PASSWORD);
+		String password = getValeurChamp(request, CHAMP_PASSWORD);
 		
 		Conseiller conseiller = null;
 		
@@ -96,7 +96,7 @@ public class ConnexionForm {
 			setErreur(CHAMP_LOGIN, e.getMessage());
 		}
 		try {
-			validationPassword(passord);
+			validationPassword(password);
 		}catch(Exception e) {
 			setErreur(CHAMP_PASSWORD, e.getMessage());
 		}
@@ -104,7 +104,7 @@ public class ConnexionForm {
 		//Si le login et le mot de passe sont valides, alors on utilise la fonction de connexion du ConseillerDao
 		if(erreurs.isEmpty())
 		{
-			conseiller = conseillerDao.connexion(login, passord);
+			conseiller = conseillerDao.connexion(login, EncryptageForm.encryptPassword(password));
 			
 			if(conseiller == null)
 			{
