@@ -18,15 +18,19 @@ import com.iut.beans.ReponseMessage;
 import com.iut.enums.DestinataireMessage;
 
 public class MessageDaoImpl implements MessageDao {
-	private static final String SQL_CREATE_MESSAGE					= "INSERT INTO message(client_id, conseiller_id, sujet, contenu, destinataire_client, destinataire_conseiller ) VALUES(?, ?, ?, ?, ?, ?)";
-	private static final String SQL_GET_MESSAGES_NON_LUS_CONSEILLER	= "SELECT UNIQUE message.id, message.client_id, message.conseiller_id, message.sujet, dbms_lob.substr(message.contenu,32767) contenu, message.date_message, message.lu, message.destinataire_client, message.destinataire_conseiller, message.date_derniere_reponse FROM message LEFT JOIN reponse_message ON reponse_message.message_id = message.id WHERE ( (message.lu = 0 AND message.destinataire_conseiller = 1 ) OR (reponse_message.lu = 0 AND reponse_message.destinataire_conseiller = 1 )) AND message.conseiller_id = ? ORDER BY message.date_derniere_reponse";
-	private static final String SQL_GET_MESSAGES_LUS_CONSEILLER		= "SELECT UNIQUE message.id, message.client_id, message.conseiller_id, message.sujet, dbms_lob.substr(message.contenu,32767) contenu, message.date_message, message.lu, message.destinataire_client, message.destinataire_conseiller, message.date_derniere_reponse FROM message WHERE message.conseiller_id = ? AND message.id NOT IN (SELECT message.id FROM message LEFT JOIN reponse_message ON reponse_message.message_id = message.id WHERE ( (message.lu = 0 AND message.destinataire_conseiller = 1 ) OR (reponse_message.lu = 0 AND reponse_message.destinataire_conseiller = 1 )) AND message.conseiller_id = ? ) ORDER BY message.date_derniere_reponse";
-	private static final String SQL_GET_MESSAGES_NON_LUS_CLIENT		= "SELECT message.* FROM message LEFT JOIN reponse_message ON reponse_message.message_id = message.id WHERE ( (message.lu = 0 AND message.destinataire_client = 1 ) OR ( reponse_message.lu = 0 AND reponse_message.destinataire_client = 1 ) ) AND message.client_id = ? ORDER BY message.date_derniere_reponse";
-	private static final String SQL_GET_MESSAGES_LUS_CLIENT			= "SELECT message.* FROM message WHERE message.client_id = ? AND message.id NOT IN (SELECT message.id FROM message LEFT JOIN reponse_message ON reponse_message.message_id = message.id WHERE ( (message.lu = 0 AND message.destinataire_client = 1 ) OR ( reponse_message.lu = 0 AND reponse_message.destinataire_client = 1 ) ) AND message.client_id = ?) ORDER BY message.date_derniere_reponse";
-	private static final String SQL_GET_REPONSES_MESSAGE			= "SELECT reponse_message.* FROM reponse_message LEFT JOIN message ON message.id = reponse_message.message_id WHERE message.id = ?";
-	private static final String SQL_CREATE_REPONSE_MESSAGE			= "INSERT INTO reponse_message(message_id, contenu, destinataire_client, destinataire_conseiller) VALUES(?, ?, ?, ?)";
-	private static final String SQL_UPDATE_DATE_DERNIER_MESSAGE		= "UPDATE message SET date_derniere_reponse = CURRENT_DATE";
-	private static final String SQL_GET_MESSAGE_ID					= "SELECT * FROM message WHERE id = ?";
+	private static final String SQL_CREATE_MESSAGE							= "INSERT INTO message(client_id, conseiller_id, sujet, contenu, destinataire_client, destinataire_conseiller ) VALUES(?, ?, ?, ?, ?, ?)";
+	private static final String SQL_GET_MESSAGES_NON_LUS_CONSEILLER			= "SELECT UNIQUE message.id, message.client_id, message.conseiller_id, message.sujet, dbms_lob.substr(message.contenu,32767) contenu, message.date_message, message.lu, message.destinataire_client, message.destinataire_conseiller, message.date_derniere_reponse FROM message LEFT JOIN reponse_message ON reponse_message.message_id = message.id WHERE ( (message.lu = 0 AND message.destinataire_conseiller = 1 ) OR (reponse_message.lu = 0 AND reponse_message.destinataire_conseiller = 1 )) AND message.conseiller_id = ? ORDER BY message.date_derniere_reponse DESC";
+	private static final String SQL_GET_MESSAGES_LUS_CONSEILLER				= "SELECT UNIQUE message.id, message.client_id, message.conseiller_id, message.sujet, dbms_lob.substr(message.contenu,32767) contenu, message.date_message, message.lu, message.destinataire_client, message.destinataire_conseiller, message.date_derniere_reponse FROM message WHERE message.conseiller_id = ? AND message.id NOT IN (SELECT message.id FROM message LEFT JOIN reponse_message ON reponse_message.message_id = message.id WHERE ( (message.lu = 0 AND message.destinataire_conseiller = 1 ) OR (reponse_message.lu = 0 AND reponse_message.destinataire_conseiller = 1 )) AND message.conseiller_id = ? ) ORDER BY message.date_derniere_reponse DESC";
+	private static final String SQL_GET_MESSAGES_NON_LUS_CLIENT				= "SELECT UNIQUE message.id, message.client_id, message.conseiller_id, message.sujet, dbms_lob.substr(message.contenu,32767) contenu, message.date_message, message.lu, message.destinataire_client, message.destinataire_conseiller, message.date_derniere_reponse FROM message LEFT JOIN reponse_message ON reponse_message.message_id = message.id WHERE ( (message.lu = 0 AND message.destinataire_client = 1 ) OR ( reponse_message.lu = 0 AND reponse_message.destinataire_client = 1 ) ) AND message.client_id = ? ORDER BY message.date_derniere_reponse DESC";
+	private static final String SQL_GET_MESSAGES_LUS_CLIENT					= "SELECT UNIQUE message.id, message.client_id, message.conseiller_id, message.sujet, dbms_lob.substr(message.contenu,32767) contenu, message.date_message, message.lu, message.destinataire_client, message.destinataire_conseiller, message.date_derniere_reponse FROM message WHERE message.client_id = ? AND message.id NOT IN (SELECT message.id FROM message LEFT JOIN reponse_message ON reponse_message.message_id = message.id WHERE ( (message.lu = 0 AND message.destinataire_client = 1 ) OR ( reponse_message.lu = 0 AND reponse_message.destinataire_client = 1 ) ) AND message.client_id = ?) ORDER BY message.date_derniere_reponse DESC";
+	private static final String SQL_GET_REPONSES_MESSAGE					= "SELECT reponse_message.* FROM reponse_message LEFT JOIN message ON message.id = reponse_message.message_id WHERE message.id = ?";
+	private static final String SQL_CREATE_REPONSE_MESSAGE					= "INSERT INTO reponse_message(message_id, contenu, destinataire_client, destinataire_conseiller) VALUES(?, ?, ?, ?)";
+	private static final String SQL_UPDATE_DATE_DERNIER_MESSAGE				= "UPDATE message SET date_derniere_reponse = CURRENT_DATE WHERE id = ?";
+	private static final String SQL_GET_MESSAGE_ID							= "SELECT * FROM message WHERE id = ?";
+	private static final String SQL_UPDATE_MESSAGE_LU_CLIENT				= "UPDATE message SET lu = 1 WHERE id = ? AND destinataire_client = 1";
+	private static final String SQL_UPDATE_REPONSE_MESSAGE_LU_CLIENT		= "UPDATE reponse_message SET lu = 1 WHERE message_id = ? AND destinataire_client = 1";
+	private static final String SQL_UPDATE_MESSAGE_LU_CONSEILLER			= "UPDATE message SET lu = 1 WHERE id = ? AND destinataire_conseiller = 1";
+	private static final String SQL_UPDATE_REPONSE_MESSAGE_LU_CONSEILLER	= "UPDATE reponse_message SET lu = 1 WHERE message_id = ? AND destinataire_conseiller = 1";
 	
 	private DAOFactory daoFactory;
 
@@ -189,7 +193,7 @@ public class MessageDaoImpl implements MessageDao {
 			reponseId = preparedStatement.executeUpdate();
 			if(reponseId > 0)
 			{
-				preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_DATE_DERNIER_MESSAGE, false);
+				preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_DATE_DERNIER_MESSAGE, false, reponse.getMessageLie().getId());
 				preparedStatement.executeUpdate();
 			}
 		}catch(SQLException e) {
@@ -222,6 +226,43 @@ public class MessageDaoImpl implements MessageDao {
 		}
 		
 		return message;
+	}
+	
+	public void updateMessageLuClient(Message message)
+	{
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_MESSAGE_LU_CLIENT, false, message.getId());
+			preparedStatement.executeUpdate();
+			fermeturesSilencieuses(preparedStatement, connection);
+			
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_REPONSE_MESSAGE_LU_CLIENT, false, message.getId());
+			preparedStatement.executeUpdate();
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(preparedStatement, connection);
+		}
+	}
+	
+	public void updateMessageLuConseiller(Message message)
+	{
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_MESSAGE_LU_CONSEILLER, false, message.getId());
+			preparedStatement.executeUpdate();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_REPONSE_MESSAGE_LU_CONSEILLER, false, message.getId());
+			preparedStatement.executeUpdate();
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(preparedStatement, connection);
+		}
 	}
 	
 	private static Message map(ResultSet resultSet) throws SQLException{

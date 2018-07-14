@@ -16,4 +16,6 @@ public interface MessageDao {
 	ArrayList<ReponseMessage> getReponsesByMessage(Message message);
 	int createReponseMessage(ReponseMessage reponse);
 	Message getMessageById(int id);
+	void updateMessageLuClient(Message message);
+	void updateMessageLuConseiller(Message message);
 }

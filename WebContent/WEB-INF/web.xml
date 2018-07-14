@@ -205,4 +205,20 @@
     <servlet-name>MessageConseiller</servlet-name>
     <url-pattern>/conseiller/messagerie/message</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>MessagerieClient</servlet-name>
+    <servlet-class>com.iut.servlets.MessagerieClient</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MessagerieClient</servlet-name>
+    <url-pattern>/client/messagerie</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>MessageClient</servlet-name>
+    <servlet-class>com.iut.servlets.MessageClient</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MessageClient</servlet-name>
+    <url-pattern>/client/messagerie/message</url-pattern>
+  </servlet-mapping>
 </web-app>
