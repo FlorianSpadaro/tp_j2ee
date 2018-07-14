@@ -49,18 +49,25 @@ public class ComptesClient extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère le Client de la session
 		Client client = (Client) request.getSession().getAttribute(ATT_CLIENT);
+		
+		//On récupère la liste des Comptes de ce Client
 		ArrayList<Compte> comptes = compteDao.getComptesByClient(client);
 		for(Compte compte : comptes)
 		{
+			//Pour chaque Compte, on récupère ses propriétaires
 			ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
 			compte.setProprietaire1(proprietaires.get(0));
 			compte.setProprietaire2(proprietaires.get(1));
 		}
 		
+		//On récupère les 8 dernières transactions du Client
 		ArrayList<Transaction> transactions = compteDao.getLastTransactionsByClient(client, 8);
 		for(Transaction transaction : transactions )
 		{
+			//Pour chaque Transaction, on récupère les propriétaires du Compte débiteur et ceux du Compte créditeur liés à cette Transaction
+			
 			if(transaction.getCompteDebiteur() != null)
 			{
 				ArrayList<Client> proprietairesDebiteur = clientDao.getClientsByCompte(transaction.getCompteDebiteur());

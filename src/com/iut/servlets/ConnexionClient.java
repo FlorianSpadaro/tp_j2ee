@@ -53,6 +53,7 @@ public class ConnexionClient extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		
 		String type = (String)request.getParameter(ATT_TYPE);
 		
 		ConnexionForm form = new ConnexionForm(clientDao);

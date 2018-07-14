@@ -51,9 +51,11 @@ public class ListerClients extends HttpServlet {
 		ListageClientsForm form = new ListageClientsForm(clientDao);
 		ListageComptesClientForm compteForm = new ListageComptesClientForm(compteDao);
 		
+		//On récupère la liste des Clients du Conseiller
 		ArrayList<Client> clients = form.listerClient(request);
 		for(Client client : clients)
 		{
+			//Pour chaque Client on récupère la liste de ses Comptes
 			client.setComptes(compteForm.listerComptesClient(client));
 		}
 		

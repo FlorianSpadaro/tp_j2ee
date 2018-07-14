@@ -36,6 +36,9 @@ public class CompteDaoImpl implements CompteDao{
 		this.daoFactory = daoFactory;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste de comptes d'un client
+	 */
 	public ArrayList<Compte> getComptesByClient(Client client)
 	{
 		ArrayList<Compte> comptes = new ArrayList<>();
@@ -62,6 +65,9 @@ public class CompteDaoImpl implements CompteDao{
 		return comptes;
 	}
 	
+	/**
+	 * Fonction de création d'un compte
+	 */
 	public boolean createCompte(Compte compte, Client client, Client autreTitulaire)
 	{
 		boolean result = false;
@@ -86,6 +92,9 @@ public class CompteDaoImpl implements CompteDao{
 		return result;
 	}
 	
+	/**
+	 * Fonction qui retourne le Compte en fonction de son ID passé en paramètre
+	 */
 	public Compte getCompteById(int id)
 	{
 		Compte compte = null;
@@ -110,6 +119,9 @@ public class CompteDaoImpl implements CompteDao{
 		return compte;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste des transactions débitées d'un Compte passé en paramètre
+	 */
 	public ArrayList<Transaction> getDebitsByCompte(Compte compte)
 	{
 		ArrayList<Transaction> transactions = new ArrayList<>();
@@ -136,6 +148,9 @@ public class CompteDaoImpl implements CompteDao{
 		return transactions;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste des transactions créditées d'un Compte passé en paramètre
+	 */
 	public ArrayList<Transaction> getCreditsByCompte(Compte compte)
 	{
 		ArrayList<Transaction> transactions = new ArrayList<>();
@@ -162,6 +177,9 @@ public class CompteDaoImpl implements CompteDao{
 		return transactions;
 	}
 	
+	/**
+	 * Fonction qui met à jour le compte passé en paramètre
+	 */
 	public boolean updateCompte(Compte compte)
 	{
 		boolean result = false;
@@ -186,6 +204,9 @@ public class CompteDaoImpl implements CompteDao{
 		return result;
 	}
 	
+	/**
+	 * Fonction qui désactive le compte dont l'ID a été passé en paramètre
+	 */
 	public boolean disableCompte(int compteId)
 	{
 		boolean result = false;
@@ -210,13 +231,15 @@ public class CompteDaoImpl implements CompteDao{
 		return result;
 	}
 	
+	/**
+	 * Fonction qui crée une Transaction
+	 */
 	public int createTransaction(Transaction transaction, Compte compteDebiteur, Compte compteCrediteur)
 	{
 		int transactionId = 0;
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		int resultset;
 		try {
 			connection = daoFactory.getConnection();
 			preparedStatement = initialisationRequetePreparee(connection, SQL_CREATE_TRANSACTION, true, transaction.getMontant(), (compteDebiteur == null ? null : compteDebiteur.getId() ), (compteCrediteur == null ? null : compteCrediteur.getId() ));
@@ -231,6 +254,10 @@ public class CompteDaoImpl implements CompteDao{
 		return transactionId;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste des dernières transactions d'un Client passé en paramètre. 
+	 * La limite, également passée en paramètre, permet de limiter le nombre de transactions qui seront retournées
+	 */
 	public ArrayList<Transaction> getLastTransactionsByClient(Client client, int limite)
 	{
 		ArrayList<Transaction> transactions = new ArrayList<>();
@@ -256,6 +283,9 @@ public class CompteDaoImpl implements CompteDao{
 		return transactions;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste des comptes à découvert des clients d'un conseiller passé en paramètre
+	 */
 	public ArrayList<Compte> getComptesDecouverts(Conseiller conseiller)
 	{
 		ArrayList<Compte> comptes = new ArrayList<>();
@@ -281,6 +311,9 @@ public class CompteDaoImpl implements CompteDao{
 		return comptes;
 	}
 	
+	/**
+	 * Fonction qui supprime la transaction dont l'ID a été passé en paramètre
+	 */
 	public boolean removeTransaction(int transactionId)
 	{
 		boolean result = false;
@@ -305,6 +338,9 @@ public class CompteDaoImpl implements CompteDao{
 		return result;
 	}
 	
+	/**
+	 * Fonction qui crée le bean Compte qui correspond au ResultSet passé en paramètre
+	 */
 	private Compte map(ResultSet resultSet) throws SQLException{
 		Compte compte = new Compte();
 		compte.setId(resultSet.getInt("id"));
@@ -314,6 +350,9 @@ public class CompteDaoImpl implements CompteDao{
 		return compte;
 	}
 	
+	/**
+	 * Fonction qui crée le bean Transaction qui correspond au ResultSet passé en paramètre
+	 */
 	private Transaction mapTransaction(ResultSet resultSet) throws SQLException{
 		Transaction transaction = new Transaction();
 		transaction.setId(resultSet.getInt("id"));

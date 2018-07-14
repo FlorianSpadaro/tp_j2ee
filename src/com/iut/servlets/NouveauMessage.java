@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.iut.beans.Client;
 import com.iut.beans.Conseiller;
 import com.iut.dao.ClientDao;
-import com.iut.dao.CompteDao;
 import com.iut.dao.ConseillerDao;
 import com.iut.dao.DAOFactory;
 import com.iut.dao.MessageDao;
@@ -55,10 +54,14 @@ public class NouveauMessage extends HttpServlet {
 		Conseiller conseiller = null;
 		if(request.getSession().getAttribute(ATT_CONSEILLER) != null)
 		{
+			//S'il s'agit d'une session d'un Conseiller, alors on récupère le Client correspondant à l'ID passé en paramètre
 			client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
+			
+			//Puis on récupère le Conseiller de la session
 			conseiller = (Conseiller) request.getSession().getAttribute(ATT_CONSEILLER);
 		}
 		else {
+			//S'il s'agit d'une session d'un Client, alors on récupère le Conseiller correspondant à l'ID passé en paramètre et le Client de la session
 			client = (Client) request.getSession().getAttribute(ATT_CLIENT);
 			conseiller = conseillerDao.getConseillerById(Integer.parseInt(request.getParameter(ATT_CONSEILLER)));
 		}
@@ -74,16 +77,22 @@ public class NouveauMessage extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EnvoiMessageForm form = new EnvoiMessageForm(messageDao, clientDao, conseillerDao);
+		
+		//On crée le Message
 		form.envoyerMessage(request);
 		
 		Client client = null;
 		Conseiller conseiller = null;
 		if(request.getSession().getAttribute(ATT_CONSEILLER) != null)
 		{
+			//S'il s'agit d'une session d'un Conseiller, alors on récupère le Client correspondant à l'ID passé en paramètre
 			client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
+			
+			//Puis on récupère le Conseiller de la session
 			conseiller = (Conseiller) request.getSession().getAttribute(ATT_CONSEILLER);
 		}
 		else {
+			//S'il s'agit d'une session d'un Client, alors on récupère le Conseiller correspondant à l'ID passé en paramètre et le Client de la session
 			client = (Client) request.getSession().getAttribute(ATT_CLIENT);
 			conseiller = conseillerDao.getConseillerById(Integer.parseInt(request.getParameter(ATT_CONSEILLER)));
 		}

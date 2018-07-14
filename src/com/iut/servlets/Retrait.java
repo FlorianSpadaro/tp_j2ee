@@ -58,33 +58,47 @@ public class Retrait extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RetraitForm form = new RetraitForm(compteDao, clientDao);
+		
+		//On effectue le retrait
 		form.retrait(request);
 		
+		//On récupère le Compte correspondant à l'ID passé en paramètre
 		Compte compte = compteDao.getCompteById(Integer.parseInt(request.getParameter(ATT_COMPTE)));
+		
+		//On récupère la liste des propriétaires de ce Compte
 		ArrayList<Client> proprietairesCompte = clientDao.getClientsByCompte(compte);
 		compte.setProprietaire1(proprietairesCompte.get(0));
 		compte.setProprietaire2(proprietairesCompte.get(1));
+		
+		//On récupère la liste des Transactions créditées de ce Compte
 		compte.setCredits(compteDao.getCreditsByCompte(compte));
 		for(Transaction transaction : compte.getCredits())
 		{
+			//Pour chaque Transaction, on récupère les propriétaires du Compte débiteur lié à cette Transaction
 			if(transaction.getCompteDebiteur() != null)
 			{
 				ArrayList<Client> proprietaires = clientDao.getClientsByCompte(transaction.getCompteDebiteur());
 				transaction.getCompteDebiteur().setProprietaire1(proprietaires.get(0));
 				transaction.getCompteDebiteur().setProprietaire2(proprietaires.get(1));
 			}
+			
+			//Pour améliorer l'affichage de la date de la Transaction
 			transaction.setDateAffiche(transaction.afficherDate());
 		}
 		
+		//On récupère la liste des Transactions débitées de ce Compte
 		compte.setDebits(compteDao.getDebitsByCompte(compte));
 		for(Transaction transaction : compte.getDebits())
 		{
+			//Pour chaque Transaction, on récupère les propriétaires du Compte créditeur lié à cette Transaction
 			if(transaction.getCompteCrediteur() != null)
 			{
 				ArrayList<Client> proprietaires = clientDao.getClientsByCompte(transaction.getCompteCrediteur());
 				transaction.getCompteCrediteur().setProprietaire1(proprietaires.get(0));
 				transaction.getCompteCrediteur().setProprietaire2(proprietaires.get(1));
 			}
+			
+			//Pour améliorer l'affichage de la date de la Transaction
 			transaction.setDateAffiche(transaction.afficherDate());
 		}
 		

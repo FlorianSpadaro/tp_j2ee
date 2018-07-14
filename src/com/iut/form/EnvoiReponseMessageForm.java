@@ -34,6 +34,9 @@ public class EnvoiReponseMessageForm {
 		this.resultat = resultat;
 	}
 	
+	/**
+	 * Fonction qui crée une Réponse à un Message
+	 */
 	public void envoyerReponse(HttpServletRequest request)
 	{
 		String contenu = getValeurChamp(request, ATT_REPONSE);
@@ -44,6 +47,7 @@ public class EnvoiReponseMessageForm {
 			setErreur(ATT_REPONSE, e.getMessage());
 		}
 		
+		//Si le contenu est valide, alors on continue le traitement
 		if(erreurs.isEmpty())
 		{
 			ReponseMessage reponse = new ReponseMessage();
@@ -70,6 +74,9 @@ public class EnvoiReponseMessageForm {
 		}
 	}
 	
+	/**
+	 * Fonction de validation du contenu de la Réponse
+	 */
 	private void validationContenu(String contenu) throws Exception{
 		if(contenu == null)
 		{

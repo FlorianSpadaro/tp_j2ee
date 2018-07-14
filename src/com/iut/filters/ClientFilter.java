@@ -44,6 +44,7 @@ public class ClientFilter implements Filter {
 		
 		HttpSession session = request.getSession();
 		
+		//Si l'utilisateur ne dispose pas d'une session Client, alors on le redirige vers la page de connexion
 		if(session.getAttribute(ATT_SESSION_CLIENT) == null && (request.getParameter(ATT_CONNEXION) == null || !request.getParameter(ATT_CONNEXION).equals("true")))
 		{
 			response.sendRedirect(request.getContextPath() + VUE_INDEX );

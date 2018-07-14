@@ -26,6 +26,9 @@ public class ConseillerDaoImpl implements ConseillerDao {
 		this.daoFactory = daoFactory;
 	}
 	
+	/**
+	 * Fonction qui retourne le Conseiller correspondant au login et au mot de passe passés en paramètres
+	 */
 	public Conseiller connexion(String login, String password)
 	{
 		Connection connexion = null;
@@ -49,6 +52,9 @@ public class ConseillerDaoImpl implements ConseillerDao {
 		return conseiller;
 	}
 	
+	/**
+	 * Fonction qui retourn le Conseiller d'un Client passé en paramètre
+	 */
 	public Conseiller getConseillerByClient(Client client)
 	{
 		Conseiller conseiller = null;
@@ -73,6 +79,9 @@ public class ConseillerDaoImpl implements ConseillerDao {
 		return conseiller;
 	}
 	
+	/**
+	 * Fonction qui retourne le bean Conseiller correspondant à l'ID passé en paramètre
+	 */
 	public Conseiller getConseillerById(int id)
 	{
 		Conseiller conseiller = null;
@@ -97,6 +106,9 @@ public class ConseillerDaoImpl implements ConseillerDao {
 		return conseiller;
 	}
 	
+	/**
+	 * Fonction qui retourne le Conseiller lié au Message passé en paramètre
+	 */
 	public Conseiller getConseillerByMessage(Message message)
 	{
 		Conseiller conseiller = null;
@@ -122,6 +134,9 @@ public class ConseillerDaoImpl implements ConseillerDao {
 		return conseiller;
 	}
 	
+	/**
+	 * Fonction qui retourne le bean Conseiller correspondant au ResultSet passé en paramètre
+	 */
 	private static Conseiller map(ResultSet resultSet) throws SQLException{
 		Conseiller conseiller = new Conseiller();
 		conseiller.setId(resultSet.getInt("id"));

@@ -47,8 +47,13 @@ public class AfficherInfosAgence extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère le Client de la session
 		Client client = (Client) request.getSession().getAttribute(ATT_CLIENT);
+		
+		//On récupère l'Agence de ce Client
 		Agence agence = agenceDao.getAgenceByClient(client);
+		
+		//On récupère le Conseiller de ce Client
 		Conseiller conseiller = conseillerDao.getConseillerByClient(client);
 		
 		request.setAttribute(ATT_AGENCE, agence);

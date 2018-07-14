@@ -56,15 +56,20 @@ public class Versement extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère l'ID du Compte passé en paramètre
 		String compte = request.getParameter(ATT_COMPTE);
 		
+		//On récupère la liste de tous les Clients
 		ArrayList<Client> listeClients = clientDao.getListeClients();
 		for(Client client : listeClients)
 		{
+			//Pour chaque Client, on récupère ses Comptes
 			client.setComptes(compteDao.getComptesByClient(client));
 		}
 		
 		VersementForm form = new VersementForm(compteDao, clientDao);
+		
+		//On effectue le versement
 		form.versement(request);
 		
 		request.setAttribute(ATT_FORM, form);

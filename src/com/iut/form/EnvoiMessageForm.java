@@ -43,6 +43,9 @@ public class EnvoiMessageForm {
 		this.resultat = resultat;
 	}
 	
+	/**
+	 * Fonction qui crée un nouveau Message
+	 */
 	public void envoyerMessage(HttpServletRequest request)
 	{
 		String sujet = getValeurChamp(request, ATT_SUJET);
@@ -60,6 +63,7 @@ public class EnvoiMessageForm {
 			setErreur(ATT_CONTENU, e.getMessage());
 		}
 		
+		//Si les infos saisies sont correctes, alors on continue le traitement
 		if(erreurs.isEmpty())
 		{
 			Message message = new Message();
@@ -88,6 +92,9 @@ public class EnvoiMessageForm {
 		}
 	}
 	
+	/**
+	 * Fonction qui valide le sujet du Message
+	 */
 	private void validationSujet(String sujet) throws Exception{
 		if(sujet == null)
 		{
@@ -95,6 +102,9 @@ public class EnvoiMessageForm {
 		}
 	}
 	
+	/**
+	 * Fonction qui valide le contenu du Message
+	 */
 	private void validationContenu(String contenu) throws Exception{
 		if(contenu == null)
 		{

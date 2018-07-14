@@ -8,10 +8,6 @@ import java.sql.Statement;
 
 public final class DAOUtilitaire {
 
-    /*
-     * Constructeur caché par défaut (car c'est une classe finale utilitaire,
-     * contenant uniquement des méthode appelées de manière statique)
-     */
     private DAOUtilitaire() {
     }
 

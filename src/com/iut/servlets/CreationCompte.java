@@ -36,6 +36,7 @@ public class CreationCompte extends HttpServlet {
 	public void init() throws ServletException {
         this.compteDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getCompteDao();
         this.clientDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getClientDao();
+        //On récupère la liste des Clients
         this.clients = clientDao.getListeClients();
     }
        
@@ -51,6 +52,7 @@ public class CreationCompte extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	//On récupère le Client correspondant à l'ID passé en paramètre
     	Client client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
     	
     	request.setAttribute(ATT_CLIENT, client);
@@ -63,13 +65,16 @@ public class CreationCompte extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère le Client correspondant à l'ID passé en paramètre
 		Client client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
+		//On récupère le l'autre titulaire du Compte correspondant à l'ID passé en paramètre
 		Client autreTitulaire = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_AUTRE_TITULAIRE)));
 		
 		request.setAttribute(ATT_LISTE_CLIENTS, clients);
 		request.setAttribute(ATT_CLIENT, client);
 		request.setAttribute(ATT_AUTRE_TITULAIRE, autreTitulaire);
 		
+		//On crée le Compte
 		CreationCompteForm form = new CreationCompteForm(compteDao);
 		form.creerCompte(request);
 		

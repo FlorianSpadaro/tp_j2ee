@@ -54,21 +54,27 @@ public class MessageConseiller extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère le Message correspondant à l'ID passé en paramètre
 		Message message = messageDao.getMessageById(Integer.parseInt(request.getParameter(ATT_MESSAGE)));
+		
+		//On récupère le Client lié à ce Message
 		message.setClient(clientDao.getClientByMessage(message));
 		
 		if(request.getParameter(ATT_REPONSE) != null)
 		{
+			//Si une réponse au Message a été envoyée, alors on crée cette Réponse
 			EnvoiReponseMessageForm form = new EnvoiReponseMessageForm(messageDao);
 			form.envoyerReponse(request);
 			
 			request.setAttribute(ATT_FORM, form);
 		}
 		
+		//On récupère la liste des Réponses du Message
 		message.setReponses(messageDao.getReponsesByMessage(message));
 		
 		messageDao.updateMessageLuConseiller(message);
 		
+		//On met à jour le statut du message à "lu"
 		request.setAttribute(ATT_MESSAGE, message);
 		
 		this.getServletContext().getRequestDispatcher(VUE).forward(request, response);

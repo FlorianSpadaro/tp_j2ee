@@ -40,6 +40,9 @@ public class VirementForm {
 		this.resultat = resultat;
 	}
 	
+	/**
+	 * Fonction qui réalise un versement d'une somme d'argent d'un Compte vers un autre
+	 */
 	public void virement(HttpServletRequest request) {
 		String montantString = getValeurChamp(request, ATT_MONTANT);
     	
@@ -49,6 +52,7 @@ public class VirementForm {
 			setErreur(ATT_MONTANT, e.getMessage());
 		}
     	
+    	//Si le montant saisi est valide, alors continue le traitement
     	if(erreurs.isEmpty())
     	{
     		Float montant = Float.parseFloat(montantString);
@@ -64,6 +68,7 @@ public class VirementForm {
     			setErreur(ATT_COMPTE, e.getMessage());
     		}
     		
+    		//Si le solde du Compte débiteur est suffisant, alors on continue le traitement
     		if(erreurs.isEmpty())
     		{
     			Compte compteCrediteur = compteDao.getCompteById(Integer.parseInt(getValeurChamp(request, ATT_DESTINATAIRE)));
@@ -71,10 +76,13 @@ public class VirementForm {
         		compteCrediteur.setProprietaire1(proprietairesCompteCrediteur.get(0));
         		compteCrediteur.setProprietaire2(proprietairesCompteCrediteur.get(1));
         		
+        		//On crée la Transaction de ce virement
         		Transaction transaction = new Transaction();
         		transaction.setMontant(montant);
         		
         		int transactionId = compteDao.createTransaction(transaction, compteDebiteur, compteCrediteur);
+        		
+        		//Si la transaction s'est correctement créée, alors on met à jour le montant du compte créditeur en premier, puis celui du compte débiteur
         		if(transactionId > 0)
         		{
         			Float nouveauMontantDebiteur = compteDebiteur.getMontant() - montant;
@@ -84,6 +92,8 @@ public class VirementForm {
         			compteCrediteur.setMontant(nouveauMontantCrediteur);
         			
         			boolean resultatCredit = compteDao.updateCompte(compteCrediteur);
+        			
+        			//Si le solde du Compte créditeur s'est correctement mis à jour, alors on met à jour le solde du Compte débiteur
         			if(resultatCredit)
         			{
         				boolean resultatDebit = compteDao.updateCompte(compteDebiteur);
@@ -92,6 +102,7 @@ public class VirementForm {
         					resultat = "Virement effectué avec succès";
         				}
         				else {
+        					//Si un problème a eut lieu lors de la mise à jour du solde du Compte débiteur, alors on retire la somme versée sur le Compte créditeur, puis on supprime la Transaction qui vient d'être créée
         					nouveauMontantCrediteur = compteCrediteur.getMontant() - montant;
         					compteCrediteur.setMontant(nouveauMontantCrediteur);
         					compteDao.updateCompte(compteCrediteur);
@@ -102,6 +113,7 @@ public class VirementForm {
         				}
         			}
         			else {
+        				//Si un problème a eut lieu lors de la mise à jour du solde du Compte créditeur, alors on supprime la Transaction que l'on vient de créer
         				compteDao.removeTransaction(transactionId);
         				resultat = "Virement échoué";
         			}
@@ -113,6 +125,9 @@ public class VirementForm {
     	}
 	}
 	
+	/**
+	 * Fonction qui vérifie si le Compte débiteur a un solde suffisant pour effectuer ce versement
+	 */
 	private void validationCompteDebiteur(Compte compte, Float montant) throws Exception{
 		Float nouveauMontant = compte.getMontant() - montant;
 		if(nouveauMontant < -(compte.getDecouvertMax()))
@@ -121,6 +136,9 @@ public class VirementForm {
 		}
 	}
 	
+	/**
+	 * Fonction qui valide le montant saisi
+	 */
 	private void validationMontant( String montant ) throws Exception{
 		int difference = 0;
 		try {

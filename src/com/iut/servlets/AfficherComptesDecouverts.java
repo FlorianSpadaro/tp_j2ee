@@ -50,10 +50,15 @@ public class AfficherComptesDecouverts extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		
+		//On récupère le Conseiller de la session
 		Conseiller conseiller = (Conseiller) session.getAttribute(ATT_CONSEILLER);
+		
+		//On récupère la liste des comptes à découvert des Clients du Conseiller
 		ArrayList<Compte> comptesDecouverts = compteDao.getComptesDecouverts(conseiller);
 		for(Compte compte : comptesDecouverts)
 		{
+			//Pour chaque Compte à découvert, on récupère ses propriétaires
 			ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
 			compte.setProprietaire1(proprietaires.get(0));
 			compte.setProprietaire2(proprietaires.get(1));
@@ -69,10 +74,14 @@ public class AfficherComptesDecouverts extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		//On récupère le Conseiller de la session
 		Conseiller conseiller = (Conseiller) session.getAttribute(ATT_CONSEILLER);
+		
+		//On récupère la liste des comptes à découvert des Clients du Conseiller
 		ArrayList<Compte> comptesDecouverts = compteDao.getComptesDecouverts(conseiller);
 		for(Compte compte : comptesDecouverts)
 		{
+			//Pour chaque Compte à découvert, on récupère ses propriétaires
 			ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
 			compte.setProprietaire1(proprietaires.get(0));
 			compte.setProprietaire2(proprietaires.get(1));

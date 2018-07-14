@@ -39,6 +39,9 @@ public class MessageDaoImpl implements MessageDao {
 		this.daoFactory = daoFactory;
 	}
 
+	/**
+	 * Fonction qui crée le Message passé en paramètre et qui retourne son ID
+	 */
 	public int createMessage(Message message)
 	{
 		Connection connection = null;
@@ -57,6 +60,9 @@ public class MessageDaoImpl implements MessageDao {
 		return messageId;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste des Messages qui n'ont pas encore été lus par le Conseiller passé en paramètre
+	 */
 	public ArrayList<Message> getMessagesNonLusByConseiller(Conseiller conseiller)
 	{
 		ArrayList<Message> messagesNonLus = new ArrayList<>();
@@ -82,6 +88,9 @@ public class MessageDaoImpl implements MessageDao {
 		return messagesNonLus;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste des Messages lus par le Conseiller passé en paramètre
+	 */
 	public ArrayList<Message> getMessagesLusByConseiller(Conseiller conseiller)
 	{
 		ArrayList<Message> messagesLus = new ArrayList<>();
@@ -107,6 +116,9 @@ public class MessageDaoImpl implements MessageDao {
 		return messagesLus;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste des Messages non lus par le Client passé en paramètre
+	 */
 	public ArrayList<Message> getMessagesNonLusByClient(Client client)
 	{
 		ArrayList<Message> messagesNonLus = new ArrayList<>();
@@ -132,6 +144,9 @@ public class MessageDaoImpl implements MessageDao {
 		return messagesNonLus;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste des Messages lus par le Client passé en paramètre
+	 */
 	public ArrayList<Message> getMessagesLusByClient(Client client)
 	{
 		ArrayList<Message> messagesLus = new ArrayList<>();
@@ -157,6 +172,9 @@ public class MessageDaoImpl implements MessageDao {
 		return messagesLus;
 	}
 	
+	/**
+	 * Fonction qui retourne la liste des réponses à un Message passé en paramètre
+	 */
 	public ArrayList<ReponseMessage> getReponsesByMessage(Message message)
 	{
 		ArrayList<ReponseMessage> reponses = new ArrayList<>();
@@ -182,6 +200,9 @@ public class MessageDaoImpl implements MessageDao {
 		return reponses;
 	}
 	
+	/**
+	 * Fonction qui crée une Réponse au Message qui lui est lié. La Réponse est passée en paramètre de cette fonction
+	 */
 	public int createReponseMessage(ReponseMessage reponse)
 	{
 		int reponseId = 0;
@@ -191,8 +212,11 @@ public class MessageDaoImpl implements MessageDao {
 			connection = daoFactory.getConnection();
 			preparedStatement = initialisationRequetePreparee(connection, SQL_CREATE_REPONSE_MESSAGE, false, reponse.getMessageLie().getId(), reponse.getContenu(), (reponse.getDestinataire().equals(DestinataireMessage.client) ? 1 : 0), (reponse.getDestinataire().equals(DestinataireMessage.conseiller) ? 1 : 0));
 			reponseId = preparedStatement.executeUpdate();
+			fermeturesSilencieuses(preparedStatement, connection);
 			if(reponseId > 0)
 			{
+				//Si la réponse au message a correctement été créée, alors on met à jour la date de la dernière réponse du bean Message
+				connection = daoFactory.getConnection();
 				preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_DATE_DERNIER_MESSAGE, false, reponse.getMessageLie().getId());
 				preparedStatement.executeUpdate();
 			}
@@ -204,6 +228,9 @@ public class MessageDaoImpl implements MessageDao {
 		return reponseId;
 	}
 	
+	/**
+	 * Fonction qui retourne le Message correspondant à l'ID passé en paramètre
+	 */
 	public Message getMessageById(int id)
 	{
 		Message message = null;
@@ -228,16 +255,21 @@ public class MessageDaoImpl implements MessageDao {
 		return message;
 	}
 	
+	/**
+	 * Fonction qui permet de mettre à jour le statut d'un Message à un Client à "lu"
+	 */
 	public void updateMessageLuClient(Message message)
 	{
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
+			//On met d'abord à jour le statut du message à "lu"
 			connection = daoFactory.getConnection();
 			preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_MESSAGE_LU_CLIENT, false, message.getId());
 			preparedStatement.executeUpdate();
 			fermeturesSilencieuses(preparedStatement, connection);
 			
+			//Puis on met à jour le statut des réponses de ce message
 			connection = daoFactory.getConnection();
 			preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_REPONSE_MESSAGE_LU_CLIENT, false, message.getId());
 			preparedStatement.executeUpdate();
@@ -248,14 +280,22 @@ public class MessageDaoImpl implements MessageDao {
 		}
 	}
 	
+	/**
+	 * Fonction qui permet de mettre à jour le statut d'un Message à un Conseiller à "lu"
+	 */
 	public void updateMessageLuConseiller(Message message)
 	{
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
+			//On met d'abord à jour le statut du message à "lu"
 			connection = daoFactory.getConnection();
 			preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_MESSAGE_LU_CONSEILLER, false, message.getId());
 			preparedStatement.executeUpdate();
+			fermeturesSilencieuses(preparedStatement, connection);
+			
+			//Puis on met à jour le statut des réponses de ce message
+			connection = daoFactory.getConnection();
 			preparedStatement = initialisationRequetePreparee(connection, SQL_UPDATE_REPONSE_MESSAGE_LU_CONSEILLER, false, message.getId());
 			preparedStatement.executeUpdate();
 		}catch(SQLException e) {
@@ -265,6 +305,9 @@ public class MessageDaoImpl implements MessageDao {
 		}
 	}
 	
+	/**
+	 * Fonction qui retourne le bean Message correspondant au ResultSet passé en paramètre
+	 */
 	private static Message map(ResultSet resultSet) throws SQLException{
 		Message message = new Message();
 		message.setId(resultSet.getInt("id"));
@@ -292,6 +335,9 @@ public class MessageDaoImpl implements MessageDao {
 		return message;
 	}
 	
+	/**
+	 * Fonction qui retourne le bean ReponseMessage correspondant au ResultSet passé en paramètre
+	 */
 	private static ReponseMessage mapReponse(ResultSet resultSet) throws SQLException{
 		ReponseMessage reponse = new ReponseMessage();
 		reponse.setId(resultSet.getInt("id"));

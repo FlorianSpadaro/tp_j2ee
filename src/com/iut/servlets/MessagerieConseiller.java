@@ -48,15 +48,22 @@ public class MessagerieConseiller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère le Conseiller de la session
 		Conseiller conseiller = (Conseiller) request.getSession().getAttribute(ATT_CONSEILLER);
+		
+		//On récupère la liste de ses Messages non lus
 		ArrayList<Message> messagesNonLus = messageDao.getMessagesNonLusByConseiller(conseiller);
 		for(Message message : messagesNonLus)
 		{
+			//Pour chaque Message on récupère le Conseiller lié à ce Message
 			message.setClient(clientDao.getClientByMessage(message));
 		}
+		
+		//On récupère la liste de ses Messages lus
 		ArrayList<Message> messagesLus = messageDao.getMessagesLusByConseiller(conseiller);
 		for(Message message : messagesLus)
 		{
+			//Pour chaque Message on récupère le Conseiller lié à ce Message
 			message.setClient(clientDao.getClientByMessage(message));
 		}
 		

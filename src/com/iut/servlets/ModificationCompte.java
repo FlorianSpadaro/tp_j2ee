@@ -49,11 +49,15 @@ public class ModificationCompte extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère le Compte correspondant à l'ID passé en paramètre
 		Compte compte = compteDao.getCompteById(Integer.parseInt(request.getParameter(ATT_COMPTE)));
+		
+		//On récupère la liste des propriétaires de ce Compte
 		ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
 		compte.setProprietaire1(proprietaires.get(0));
 		compte.setProprietaire2(proprietaires.get(1));
 		
+		//On récupère la liste de tous les Clients
 		ArrayList<Client> listeClients = clientDao.getListeClients();
 		
 		request.setAttribute(ATT_COMPTE, compte);
@@ -67,13 +71,18 @@ public class ModificationCompte extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ModificationCompteForm form = new ModificationCompteForm(compteDao, clientDao);
+		//On met à jour le Compte
 		form.modifierCompte(request);
 		
+		//On récupère le Compte correspondant à l'ID passé en paramètre
 		Compte compte = compteDao.getCompteById(Integer.parseInt(request.getParameter(ATT_COMPTE)));
+		
+		//On récupère la liste des propriétaires de ce Compte
 		ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
 		compte.setProprietaire1(proprietaires.get(0));
 		compte.setProprietaire2(proprietaires.get(1));
 		
+		//On récupère la liste de tous les Clients
 		ArrayList<Client> listeClients = clientDao.getListeClients();
 		
 		request.setAttribute(ATT_COMPTE, compte);

@@ -39,6 +39,10 @@ public class ModificationCompteForm {
 	public void setResultat(String resultat) {
 		this.resultat = resultat;
 	}
+	
+	/**
+	 * Fonction qui met à jour un Compte
+	 */
 	public void modifierCompte(HttpServletRequest request)
 	{
 		String libelle = getValeurChamp(request, ATT_LIBELLE);
@@ -61,6 +65,7 @@ public class ModificationCompteForm {
 			setErreur(ATT_DECOUVERT, e.getMessage());
 		}
 		
+		//Si les informations saisies sont valides, alors on continue le traitement
 		if(erreurs.isEmpty())
 		{
 			Float montant = Float.parseFloat(montantString);
@@ -86,6 +91,9 @@ public class ModificationCompteForm {
 		}
 	}
 	
+	/**
+	 * Fonction de validation du libellé du Compte
+	 */
 	private void validationLibelle( String libelle ) throws Exception{
 		if(libelle == null)
 		{
@@ -93,6 +101,9 @@ public class ModificationCompteForm {
 		}
 	}
 	
+	/**
+	 * Fonction de validation du montant du Compte
+	 */
 	private void validationMontant( String montant ) throws Exception{
 		int difference = 0;
 		try {
@@ -108,6 +119,9 @@ public class ModificationCompteForm {
 		}
 	}
 	
+	/**
+	 * Fonction de validation du découvert du Compte
+	 */
 	private void validationDecouvert( String decouvert ) throws Exception{
 		int difference = 0;
 		try {

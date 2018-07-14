@@ -28,6 +28,7 @@ public class DeconnexionConseiller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On supprime la session en cours
 		request.getSession().invalidate();
 		this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
 	}

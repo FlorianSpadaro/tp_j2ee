@@ -38,6 +38,9 @@ public class RetraitForm {
 		this.resultat = resultat;
 	}
 	
+	/**
+	 * Fonction qui permet de retirer une somme d'argent d'un Compte
+	 */
 	public void retrait(HttpServletRequest request)
 	{
 		String montantString = getValeurChamp(request, ATT_MONTANT);
@@ -48,6 +51,7 @@ public class RetraitForm {
 			setErreur(ATT_MONTANT, e.getMessage());
 		}
 		
+		//Si le montant est valide, alors on continue le traitement
 		if(erreurs.isEmpty())
 		{
 			Float montant = Float.parseFloat(montantString);
@@ -62,12 +66,15 @@ public class RetraitForm {
     			setErreur(ATT_COMPTE, e.getMessage());
     		}
 			
+			//Si le compte débiteur a assez d'argent pour réaliser ce retrait, alors on continue le traitement
 			if(erreurs.isEmpty())
 			{
 				Transaction transaction = new Transaction();
         		transaction.setMontant(montant);
         		
         		int transactionId = compteDao.createTransaction(transaction, compte, null);
+        		
+        		//Si la transaction a correctement été créée, alors on met à jour le solde du compte
         		if(transactionId > 0)
         		{
         			Float nouveauMontant = compte.getMontant() - montant;
@@ -79,6 +86,7 @@ public class RetraitForm {
         				resultat = "Retrait effectué avec succès";
         			}
         			else {
+        				//Si une erreur s'est produite lors de la mise à jour du solde du compte, alors on supprime la Transaction qui vient d'être créée
         				compteDao.removeTransaction(transactionId);
         				resultat = "Retrait échoué";
         			}
@@ -96,6 +104,9 @@ public class RetraitForm {
 		}
 	}
 	
+	/**
+	 * Fonction qui valide le montant du retrait
+	 */
 	private void validationMontant( String montant ) throws Exception{
 		int difference = 0;
 		try {
@@ -111,6 +122,9 @@ public class RetraitForm {
 		}
 	}
 	
+	/**
+	 * Fonction qui vérifie si le solde du compte débiteur est suffisant (s'il ne dépasse pas le montant à découvert maximum du Compte)
+	 */
 	private void validationCompteDebiteur(Compte compte, Float montant) throws Exception{
 		Float nouveauMontant = compte.getMontant() - montant;
 		if(nouveauMontant < -(compte.getDecouvertMax()))
@@ -118,12 +132,18 @@ public class RetraitForm {
 			throw new Exception("Solde du compte insuffisant");
 		}
 	}
-
+	
+	/*
+     * Ajoute un message correspondant au champ spécifié à la map des erreurs.
+     */
     private void setErreur( String champ, String message ) {
         erreurs.put( champ, message );
     }
 
-    
+    /*
+     * Méthode utilitaire qui retourne null si un champ est vide, et son contenu
+     * sinon.
+     */
     private static String getValeurChamp( HttpServletRequest request, String nomChamp ) {
         String valeur = request.getParameter( nomChamp );
         if ( valeur == null || valeur.trim().length() == 0 ) {

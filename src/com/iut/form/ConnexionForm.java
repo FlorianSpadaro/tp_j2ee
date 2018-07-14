@@ -41,6 +41,9 @@ public class ConnexionForm {
 		this.erreurs = erreurs;
 	}
 	
+	/**
+	 * Fonction qui retourne le Client correspondant au login et au mot de passe passé en paramètre
+	 */
 	public Client connecterClient(HttpServletRequest request)
 	{
 		/* Récupération des champs du formulaire */
@@ -61,6 +64,7 @@ public class ConnexionForm {
 			setErreur(CHAMP_PASSWORD, e.getMessage());
 		}
 		
+		//Si le login et le mot de passe sont valides, alors on utilise la fonction de connexion du ClientDao
 		if(erreurs.isEmpty())
 		{
 			client = clientDao.connexion(login, passord);
@@ -74,6 +78,9 @@ public class ConnexionForm {
 		return client;
 	}
 	
+	/**
+	 * Fonction qui retourne le Conseiller correspondant au login et au mot de passe passé en paramètre
+	 */
 	public Conseiller connecterConseiller(HttpServletRequest request)
 	{
 		/* Récupération des champs du formulaire */
@@ -94,6 +101,7 @@ public class ConnexionForm {
 			setErreur(CHAMP_PASSWORD, e.getMessage());
 		}
 		
+		//Si le login et le mot de passe sont valides, alors on utilise la fonction de connexion du ConseillerDao
 		if(erreurs.isEmpty())
 		{
 			conseiller = conseillerDao.connexion(login, passord);

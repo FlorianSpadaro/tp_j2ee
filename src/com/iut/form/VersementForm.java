@@ -43,6 +43,9 @@ public class VersementForm {
 		this.resultat = resultat;
 	}
     
+	/**
+	 * Fonction qui effectue un versement d'argent sur un Compte
+	 */
     public void versement(HttpServletRequest request) {
     	String montantString = getValeurChamp(request, ATT_MONTANT);
     	
@@ -52,6 +55,7 @@ public class VersementForm {
 			setErreur(ATT_MONTANT, e.getMessage());
 		}
     	
+    	//Si le montant saisi est valide, alors on continue le traitement
     	if(erreurs.isEmpty())
     	{
     		Float montant = Float.parseFloat(montantString);
@@ -61,10 +65,12 @@ public class VersementForm {
     		compte.setProprietaire1(proprietaires.get(0));
     		compte.setProprietaire2(proprietaires.get(1));
     		
+    		//On crée la Transaction
     		Transaction transaction = new Transaction();
     		transaction.setMontant(montant);
     		
     		int transactionId = compteDao.createTransaction(transaction, null, compte);
+    		//Si la Transaction s'est créée correctement, alors on met à jour le solde du compte
     		if(transactionId > 0)
     		{
     			Float nouveauMontant = montant + compte.getMontant();
@@ -75,6 +81,7 @@ public class VersementForm {
         			resultat = "Versement effectué avec succès";
         		}
         		else {
+        			//Si une erreur s'est produite lors de la mise à jour du solde du Compte, alors on supprime la Transaction que l'on vient de créer
         			compteDao.removeTransaction(transactionId);
         			resultat = "Versement échoué";
         		}
@@ -89,6 +96,9 @@ public class VersementForm {
     	}
     }
 	
+    /**
+     * Fonction qui valide le montant du versement
+     */
 	private void validationMontant( String montant ) throws Exception{
 		int difference = 0;
 		try {

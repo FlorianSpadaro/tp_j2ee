@@ -31,7 +31,9 @@ public class ClientDaoImpl implements ClientDao {
 	}
 
 
-	/* Récupération du client avec son login et son mot de passe */
+	/**
+	 * Récupération du client avec son login et son mot de passe
+	 */
 	@Override
 	public Client connexion(String login, String password) {
 		Connection connexion = null;
@@ -55,6 +57,9 @@ public class ClientDaoImpl implements ClientDao {
 		return client;
 	}
 	
+	/**
+	 * Récupération du bean Client, grâce à son ID passé en paramètre
+	 */
 	public Client getClientById(int id)
 	{
 		Client client = null;
@@ -80,6 +85,9 @@ public class ClientDaoImpl implements ClientDao {
 		return client;
 	}
 	
+	/**
+	 * Récupération de la liste des clients d'un conseiller
+	 */
 	public ArrayList<Client> getClientsByConseiller(Conseiller conseiller)
 	{
 		ArrayList<Client> clients = new ArrayList<>();
@@ -105,6 +113,9 @@ public class ClientDaoImpl implements ClientDao {
 		return clients;
 	}
 	
+	/**
+	 * Retourne la liste de tous les clients
+	 */
 	public ArrayList<Client> getListeClients()
 	{
 		ArrayList<Client> clients = new ArrayList<>();
@@ -130,6 +141,9 @@ public class ClientDaoImpl implements ClientDao {
 		return clients;
 	}
 	
+	/**
+	 * Retourne la liste des clients d'un compte passé en paramètre
+	 */
 	public ArrayList<Client> getClientsByCompte(Compte compte)
 	{
 		ArrayList<Client> clients = new ArrayList<>();
@@ -162,6 +176,9 @@ public class ClientDaoImpl implements ClientDao {
 		return clients;
 	}
 	
+	/**
+	 * Retourne la liste de clients dont le nom ou le prénom correspond à la recherche passée en paramètre
+	 */
 	public ArrayList<Client> getClientsBySearch(String recherche)
 	{
 		ArrayList<Client> clients = new ArrayList<>();
@@ -189,6 +206,9 @@ public class ClientDaoImpl implements ClientDao {
 		return clients;
 	}
 	
+	/**
+	 * Retourne le Client lié au Message passé en paramètre
+	 */
 	public Client getClientByMessage(Message message)
 	{
 		Client client = null;
@@ -213,6 +233,9 @@ public class ClientDaoImpl implements ClientDao {
 		return client;
 	}
 	
+	/**
+	 * Fonction qui retourne le bean Client correspondant au ResultSet passé en paramètre
+	 */
 	private static Client map(ResultSet resultSet) throws SQLException{
 		Client client = new Client();
 		client.setId(resultSet.getInt("id"));

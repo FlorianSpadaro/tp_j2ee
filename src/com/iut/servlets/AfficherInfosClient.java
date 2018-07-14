@@ -56,18 +56,25 @@ public class AfficherInfosClient extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère le Client correspondant à l'ID passé en paramètre
 		Client client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
+		
+		//On récupère les Comptes de ce Client
 		client.setComptes(compteDao.getComptesByClient(client));
 		for(Compte compte : client.getComptes())
 		{
+			//On récupère les propriétaires de chacun de ces Comptes
 			ArrayList<Client> proprietaires = clientDao.getClientsByCompte(compte);
 			compte.setProprietaire1(proprietaires.get(0));
 			compte.setProprietaire2(proprietaires.get(1));
 		}
 		
+		//On récupère les 8 dernières Transactions du Client
 		ArrayList<Transaction> transactions = compteDao.getLastTransactionsByClient(client, 8);
 		for(Transaction transaction : transactions)
 		{
+			//Pour chaque Transaction, on récupère les propriétaires du Compte débiteur et ceux du Compte créditeur liés à cette Transaction
+			
 			if(transaction.getCompteDebiteur() != null)
 			{
 				ArrayList<Client> proprietairesDebiteur = clientDao.getClientsByCompte(transaction.getCompteDebiteur());

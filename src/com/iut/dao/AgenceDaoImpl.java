@@ -21,6 +21,9 @@ public class AgenceDaoImpl implements AgenceDao {
 		this.daoFactory = daoFactory;
 	}
 	
+	/**
+	 * Fonction qui retourne le bean Agence, en prenant en paramètre son ID
+	 */
 	public Agence getAgenceById(int id)
 	{
 		Agence agence = null;
@@ -43,6 +46,9 @@ public class AgenceDaoImpl implements AgenceDao {
 		return agence;
 	}
 	
+	/**
+	 * Fonction qui retourne l'Agence du Client donné en paramètres
+	 */
 	public Agence getAgenceByClient(Client client)
 	{
 		Agence agence = null;
@@ -65,6 +71,10 @@ public class AgenceDaoImpl implements AgenceDao {
 		return agence;
 	}
 	
+	
+	/**
+	 * Fonction qui permet de créer un bean Agence grâce au ResultSet passé en paramètre
+	 */
 	private static Agence map(ResultSet resultSet) throws SQLException{
 		Agence agence = new Agence();
 		agence.setId(resultSet.getInt("id"));

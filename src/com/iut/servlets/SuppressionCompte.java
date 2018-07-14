@@ -50,12 +50,15 @@ public class SuppressionCompte extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On désactive le Compte grâce à son ID passé en paramètre
 		boolean reponse = compteDao.disableCompte(Integer.parseInt(request.getParameter(ATT_COMPTE)));
 		if(reponse)
 		{
+			//Si tout se déroule correctement, on renvoit vers la Vue de la liste des Clients du Conseiller
 			this.getServletContext().getRequestDispatcher(VUE_CLIENTS).forward(request, response);
 		}
 		else {
+			//Sinon, on prévient le Conseiller qu'une erreur s'est produite et on le retourne sur la Vue du Compte qu'il a tenté de désactiver
 			String resultat = "Erreur lors de la suppression";
 			
 			request.setAttribute(ATT_RESULTAT, resultat);

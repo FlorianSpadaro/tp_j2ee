@@ -54,10 +54,14 @@ public class RechercheClients extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère la recherche du Conseiller
 		String recherche = request.getParameter(ATT_RECHERCHE);
+		
+		//On récupère la liste des Clients correspondant à cette recherche
 		ArrayList<Client> clients = clientDao.getClientsBySearch(recherche);
 		for(Client client : clients)
 		{
+			//Pour chaque Client, on récupère ses Comptes
 			client.setComptes(compteDao.getComptesByClient(client));
 		}
 		

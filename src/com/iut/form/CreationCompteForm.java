@@ -41,6 +41,9 @@ public class CreationCompteForm {
 		this.resultat = resultat;
 	}
 	
+	/**
+	 * Fonction qui crée un Compte
+	 */
 	public void creerCompte(HttpServletRequest request)
 	{
 		String libelle = getValeurChamp(request, ATT_LIBELLE);
@@ -69,6 +72,7 @@ public class CreationCompteForm {
 			setErreur(ATT_DECOUVERT, e.getMessage());
 		}
 		
+		//Si les informations sont valides, alors nous pouvons créer le compte
 		if(erreurs.isEmpty())
 		{
 			Float montant = Float.parseFloat(montantString);
@@ -93,6 +97,9 @@ public class CreationCompteForm {
 		}
 	}
 	
+	/**
+	 * Fonction de validation du libelle du Compte
+	 */
 	private void validationLibelle( String libelle ) throws Exception{
 		if(libelle == null)
 		{
@@ -100,6 +107,9 @@ public class CreationCompteForm {
 		}
 	}
 	
+	/**
+	 * Fonction de validation du montant du Compte
+	 */
 	private void validationMontant( String montant ) throws Exception{
 		int difference = 0;
 		try {
@@ -115,6 +125,9 @@ public class CreationCompteForm {
 		}
 	}
 	
+	/**
+	 * Fonction de validation du découvert du Compte
+	 */
 	private void validationDecouvert( String decouvert ) throws Exception{
 		int difference = 0;
 		try {

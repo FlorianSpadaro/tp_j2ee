@@ -57,16 +57,23 @@ public class Virement extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//On récupère l'ID du Compte passé en paramètre
 		String compte = request.getParameter(ATT_COMPTE);
+		
+		//Variable qui va nous permettre de savoir, sur la Vue, que l'utilisateur a tenté de faire un virement
 		String type = "virement";
 		
+		//On récupère la liste de tous les Clients
 		ArrayList<Client> listeClients = clientDao.getListeClients();
 		for(Client client : listeClients)
 		{
+			//Pour chaque Client, on récupère ses Comptes
 			client.setComptes(compteDao.getComptesByClient(client));
 		}
 		
 		VirementForm form = new VirementForm(compteDao, clientDao);
+		
+		//On effectue le virement
 		form.virement(request);
 		
 		request.setAttribute(ATT_FORM, form);
