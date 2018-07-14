@@ -15,7 +15,10 @@
 				<th>Mon conseiller: </th>
 				<td>
 					${ requestScope.conseiller.nom } ${ requestScope.conseiller.prenom }
-					<button class="btn btn-primary btn-sm">Envoyer un message</button>
+					<form class="form-inline" method="GET" action="<c:url value='/client/agence/conseiller/message' />">
+						<input type="hidden" name="conseiller" value="${ requestScope.conseiller.id }" />
+						<button class="btn btn-primary btn-sm">Envoyer un message</button>
+					</form>
 				</td>
 			</tr>
 			<tr>

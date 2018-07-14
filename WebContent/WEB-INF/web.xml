@@ -147,6 +147,7 @@
   <servlet-mapping>
     <servlet-name>NouveauMessage</servlet-name>
     <url-pattern>/conseiller/client/message</url-pattern>
+    <url-pattern>/client/agence/conseiller/message</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>ComptesClient</servlet-name>

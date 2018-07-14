@@ -11,7 +11,10 @@ import com.iut.beans.Client;
 import com.iut.beans.Conseiller;
 import com.iut.dao.ClientDao;
 import com.iut.dao.CompteDao;
+import com.iut.dao.ConseillerDao;
 import com.iut.dao.DAOFactory;
+import com.iut.dao.MessageDao;
+import com.iut.form.EnvoiMessageForm;
 
 /**
  * Servlet implementation class NouveauMessage
@@ -23,12 +26,17 @@ public class NouveauMessage extends HttpServlet {
 	public static final String CONF_DAO_FACTORY = "daofactory";
 	public static final String ATT_CONSEILLER	= "conseiller";
 	public static final String ATT_CLIENT		= "client";
+	public static final String ATT_FORM			= "form";
 	public static final String VUE				= "/WEB-INF/nouveauMessage.jsp";
        
-	ClientDao clientDao;
+	private ClientDao clientDao;
+	private ConseillerDao conseillerDao;
+	private MessageDao messageDao;
 	
 	public void init() throws ServletException {
         this.clientDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getClientDao();
+        this.conseillerDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getConseillerDao();
+        this.messageDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getMessageDao();
     }
 	
     /**
@@ -43,8 +51,17 @@ public class NouveauMessage extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Client client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
-		Conseiller conseiller = (Conseiller) request.getSession().getAttribute(ATT_CONSEILLER);
+		Client client = null;
+		Conseiller conseiller = null;
+		if(request.getSession().getAttribute(ATT_CONSEILLER) != null)
+		{
+			client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
+			conseiller = (Conseiller) request.getSession().getAttribute(ATT_CONSEILLER);
+		}
+		else {
+			client = (Client) request.getSession().getAttribute(ATT_CLIENT);
+			conseiller = conseillerDao.getConseillerById(Integer.parseInt(request.getParameter(ATT_CONSEILLER)));
+		}
 		
 		request.setAttribute(ATT_CLIENT, client);
 		request.setAttribute(ATT_CONSEILLER, conseiller);
@@ -56,7 +73,26 @@ public class NouveauMessage extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		EnvoiMessageForm form = new EnvoiMessageForm(messageDao, clientDao, conseillerDao);
+		form.envoyerMessage(request);
 		
+		Client client = null;
+		Conseiller conseiller = null;
+		if(request.getSession().getAttribute(ATT_CONSEILLER) != null)
+		{
+			client = clientDao.getClientById(Integer.parseInt(request.getParameter(ATT_CLIENT)));
+			conseiller = (Conseiller) request.getSession().getAttribute(ATT_CONSEILLER);
+		}
+		else {
+			client = (Client) request.getSession().getAttribute(ATT_CLIENT);
+			conseiller = conseillerDao.getConseillerById(Integer.parseInt(request.getParameter(ATT_CONSEILLER)));
+		}
+		
+		request.setAttribute(ATT_CLIENT, client);
+		request.setAttribute(ATT_CONSEILLER, conseiller);
+		request.setAttribute(ATT_FORM, form);
+		
+		this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
 	}
 
 }

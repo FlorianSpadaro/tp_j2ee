@@ -83,4 +83,8 @@ public class DAOFactory {
     public AgenceDao getAgenceDao() {
     	return new AgenceDaoImpl(this);
     }
+    
+    public MessageDao getMessageDao() {
+    	return new MessageDaoImpl(this);
+    }
 }
