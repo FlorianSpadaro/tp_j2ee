@@ -18,7 +18,7 @@
         <a class="nav-link" href="<c:url value='/conseiller/client/compte/decouvert' />">Découverts</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Messagerie</a>
+        <a class="nav-link" href="<c:url value='/conseiller/messagerie' />">Messagerie</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="<c:url value='/conseiller/deconnexion' />" style="color: red;">Déconnexion</a>

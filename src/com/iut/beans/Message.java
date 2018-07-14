@@ -1,6 +1,7 @@
 package com.iut.beans;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import com.iut.enums.DestinataireMessage;
@@ -12,7 +13,10 @@ public class Message {
 	private String sujet;
 	private String contenu;
 	private LocalDateTime date;
+	private String dateAffiche;
 	private boolean lu;
+	private LocalDateTime dateDerniereReponse;
+	private String dateDerniereReponseAffiche;
 	private DestinataireMessage destinataire;
 	private ArrayList<ReponseMessage> reponses;
 	
@@ -66,6 +70,7 @@ public class Message {
 
 	public void setDate(LocalDateTime date) {
 		this.date = date;
+		this.dateAffiche = afficherDate();
 	}
 
 	public boolean isLu() {
@@ -91,6 +96,40 @@ public class Message {
 	public void setReponses(ArrayList<ReponseMessage> reponses) {
 		this.reponses = reponses;
 	}
+
+	public String getDateAffiche() {
+		return dateAffiche;
+	}
+
+	public void setDateAffiche(String dateAffiche) {
+		this.dateAffiche = dateAffiche;
+	}
+	public LocalDateTime getDateDerniereReponse() {
+		return dateDerniereReponse;
+	}
+
+	public void setDateDerniereReponse(LocalDateTime dateDerniereReponse) {
+		this.dateDerniereReponse = dateDerniereReponse;
+		this.dateDerniereReponseAffiche = afficherDateDerniereReponse();
+	}
+
+	public String getDateDerniereReponseAffiche() {
+		return dateDerniereReponseAffiche;
+	}
+
+	public void setDateDerniereReponseAffiche(String dateDerniereReponseAffiche) {
+		this.dateDerniereReponseAffiche = dateDerniereReponseAffiche;
+	}
+
+	public String afficherDate()
+	{
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		return this.date.format(formatter);
+	}
 	
-	
+	public String afficherDateDerniereReponse()
+	{
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		return this.dateDerniereReponse.format(formatter);
+	}
 }

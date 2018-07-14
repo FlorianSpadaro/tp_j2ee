@@ -12,6 +12,7 @@ import static com.iut.dao.DAOUtilitaire.initialisationRequetePreparee;
 import com.iut.beans.Client;
 import com.iut.beans.Compte;
 import com.iut.beans.Conseiller;
+import com.iut.beans.Message;
 
 public class ClientDaoImpl implements ClientDao {
 	private static final String SQL_CONNEXION 				= "SELECT * FROM client WHERE login = ? AND password = ?";
@@ -20,6 +21,7 @@ public class ClientDaoImpl implements ClientDao {
 	private static final String SQL_GET_CLIENTS				= "SELECT * FROM client ORDER BY nom, prenom";
 	private static final String SQL_GET_CLIENTS_COMPTE		= "SELECT titulaire_1, titulaire_2 FROM compte WHERE id = ?";
 	private static final String SQL_GET_CLIENTS_SEARCH		= "SELECT * FROM client WHERE UPPER(nom) LIKE ? OR UPPER(prenom) LIKE ?";
+	private static final String SQL_GET_CLIENT_MESSAGE		= "SELECT client.* FROM client JOIN message ON message.client_id = client.id WHERE message.id = ?";
 	
 	private DAOFactory daoFactory;
 	
@@ -185,6 +187,30 @@ public class ClientDaoImpl implements ClientDao {
 		}
 		
 		return clients;
+	}
+	
+	public Client getClientByMessage(Message message)
+	{
+		Client client = null;
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = daoFactory.getConnection();
+			preparedStatement = initialisationRequetePreparee(connection, SQL_GET_CLIENT_MESSAGE, false, message.getId());
+			resultSet = preparedStatement.executeQuery();
+			if(resultSet.next())
+			{
+				client = map(resultSet);
+			}
+		}catch(SQLException e) {
+			throw new DAOException(e.getMessage());
+		}finally {
+			fermeturesSilencieuses(resultSet, preparedStatement, connection);
+		}
+		
+		return client;
 	}
 	
 	private static Client map(ResultSet resultSet) throws SQLException{

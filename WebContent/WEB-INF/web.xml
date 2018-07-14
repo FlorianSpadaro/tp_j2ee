@@ -189,4 +189,20 @@
     <servlet-name>Retrait</servlet-name>
     <url-pattern>/client/comptes/compte/retrait</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>MessagerieConseiller</servlet-name>
+    <servlet-class>com.iut.servlets.MessagerieConseiller</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MessagerieConseiller</servlet-name>
+    <url-pattern>/conseiller/messagerie</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>MessageConseiller</servlet-name>
+    <servlet-class>com.iut.servlets.MessageConseiller</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MessageConseiller</servlet-name>
+    <url-pattern>/conseiller/messagerie/message</url-pattern>
+  </servlet-mapping>
 </web-app>
