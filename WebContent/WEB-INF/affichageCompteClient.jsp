@@ -49,7 +49,10 @@
 		<div class="row">
 			<h2 class="display-2">Transactions</h2>
 		</div>
-		<button class="btn btn-success" data-toggle="modal" data-target="#modaleRetirer">Retirer de l'argent</button>
+		<div>
+			<button class="btn btn-success" data-toggle="modal" data-target="#modaleRetirer">Retirer de l'argent</button>
+			<button class="btn btn-primary" data-toggle="modal" data-target="#modaleVirement">Nouveau Virement</button>
+		</div>
 		<br/><br/>
 		<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
 		  <li class="nav-item">
@@ -155,12 +158,53 @@
 	  </div>
 	</div>
 	
+	<div class="modal fade" id="modaleVirement" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Nouveau Virement</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <form class="form" id="virementForm" method="POST" action="<c:url value='/client/comptes/compte/virement' />">
+	        	<input type="hidden" name="compte" value="${ requestScope.compte.id }" />
+		  			<div class="form-group">
+		  				<label>Destinataire:</label>
+		  				<select class="form-control" name="destinataire">
+		  					<c:forEach items="${ requestScope.listeClients }" var="client">
+		  						<optgroup label="${ client.nom } ${ client.prenom }">
+		  							<c:forEach items="${ client.comptes }" var="ceCompte">
+		  								<option value="${ ceCompte.id }">${ ceCompte.libelle }</option>
+		  							</c:forEach>
+		  						</optgroup>
+		  					</c:forEach>
+		  				</select>
+		  			</div>
+		  			<div class="form-group">
+		  				<label>Montant:</label>
+		  				<input type="text" name="montantVirement" value="0" class="form-control" />
+		  			</div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+	        <button type="button" class="btn btn-primary" id="validerVirement">Valider</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
 	<!-- SCRIPTS -->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 	<script>
 		$("#validerRetrait").click(function(){
 			$("#retraitForm").submit();
+		});
+		$("#validerVirement").click(function(){
+			$("#virementForm").submit();
 		});
 	</script>
 </body>

@@ -221,4 +221,12 @@
     <servlet-name>MessageClient</servlet-name>
     <url-pattern>/client/messagerie/message</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>VirementClient</servlet-name>
+    <servlet-class>com.iut.servlets.VirementClient</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>VirementClient</servlet-name>
+    <url-pattern>/client/comptes/compte/virement</url-pattern>
+  </servlet-mapping>
 </web-app>

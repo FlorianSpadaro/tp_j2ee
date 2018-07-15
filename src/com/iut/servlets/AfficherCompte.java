@@ -27,6 +27,7 @@ public class AfficherCompte extends HttpServlet {
 	public static final String ATT_CLIENT		= "client";
 	public static final String ATT_COMPTE		= "compte";
 	public static final String ATT_CONSEILLER	= "conseiller";
+	public static final String ATT_CLIENTS		= "listeClients";
 	public static final String VUE				= "/WEB-INF/affichageCompte.jsp";
 	public static final String VUE_CLIENT		= "/WEB-INF/affichageCompteClient.jsp";
 	
@@ -108,6 +109,15 @@ public class AfficherCompte extends HttpServlet {
 			this.getServletContext().getRequestDispatcher( VUE ).forward(request, response);
 		}
 		else {
+			//S'il s'agit d'une session Client, alors on récupère la liste des Clients, ainsi que leurs Comptes (pour le virement)
+			ArrayList<Client> listeClients = clientDao.getListeClients();
+			for(Client ceClient : listeClients )
+			{
+				ceClient.setComptes(compteDao.getComptesByClient(ceClient));
+			}
+			
+			request.setAttribute(ATT_CLIENTS, listeClients);
+			
 			this.getServletContext().getRequestDispatcher( VUE_CLIENT ).forward(request, response);
 		}
 	}

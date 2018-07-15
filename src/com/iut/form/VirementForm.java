@@ -119,9 +119,12 @@ public class VirementForm {
         			}
         		}
     		}
+    		else {
+    			resultat = "Virement échoué: Solde du compte débiteur insuffisant";
+    		}
     	}
     	else {
-    		resultat = "Virement échoué. Veuillez vérifier vos données";
+    		resultat = "Virement échoué: Montant incorrect";
     	}
 	}
 	
