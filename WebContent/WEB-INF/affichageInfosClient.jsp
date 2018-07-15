@@ -15,10 +15,18 @@
 	<c:import url="/inc/conseiller/navbar.jsp"></c:import>
 	<br/>
 	<div class="container" >
-		<form class="form" method="GET" action="<c:url value='/conseiller/client/message' />">
-			<input type="hidden" name="client" value="${ requestScope.client.id }" />
-			<button class="btn btn-info float-right" >Ecrire Message</button>
-		</form>
+		<div class="row">
+			<div class="col-md-12" >
+				<form class="form" method="GET" action="<c:url value='/conseiller/client/message' />">
+					<input type="hidden" name="client" value="${ requestScope.client.id }" />
+					<button class="btn btn-info float-right" >Ecrire Message</button>
+				</form>
+				<form method="GET" action="<c:url value='/conseiller/creationCompte' />" class="form-inline float-right">
+					<input type="hidden" name="client" value="${ client.id }" />
+					<button class="btn btn-success" style="margin-right: 10px" >Nouveau Compte</button>
+				</form>
+			</div>
+		</div>
 		<h1 class="display-1" >${ requestScope.client.nom } ${ requestScope.client.prenom }</h1>
 		<br/>
 		<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
@@ -34,7 +42,7 @@
 		  <div class="tab-pane fade show active" id="pills-comptes" role="tabpanel" aria-labelledby="pills-comptes-tab">
 		  	<div class="row" style="justify-content: center;">
 		  		<c:forEach items="${ requestScope.client.comptes }" var="compte">
-		  			<div class="card" style="width: 18rem;">
+		  			<div class="card" style="width: 18rem; margin: 5px">
 					  <div class="card-body">
 					    <h5 class="card-title">
 					    	<form class="form-inline" method="POST" action="<c:url value='/conseiller/client/compte' />" style="justify-content: center;">

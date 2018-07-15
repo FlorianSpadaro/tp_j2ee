@@ -30,7 +30,7 @@
 		  <div class="tab-pane fade show active" id="pills-comptes" role="tabpanel" aria-labelledby="pills-comptes-tab">
 		  	<div class="row" style="justify-content: center;">
 		  		<c:forEach items="${ requestScope.comptes }" var="compte">
-		  			<div class="card" style="width: 18rem;">
+		  			<div class="card" style="width: 18rem; margin: 5px">
 					  <div class="card-body">
 					    <h5 class="card-title">
 					    	<form class="form-inline" method="POST" action="<c:url value='/client/comptes/compte' />" style="justify-content: center;">
